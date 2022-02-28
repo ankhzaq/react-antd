@@ -2,16 +2,15 @@ import 'antd/dist/antd.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
-import { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 
 
-interface HeaderProps {
-  gridOptions: any,
+interface GridProps {
+  gridOptions?: any,
   height: string,
 };
 
-const defaultProps: HeaderProps = {
+const defaultProps: GridProps = {
   gridOptions: {},
   height: `${window.innerHeight}px`
 }
@@ -46,9 +45,4 @@ export const Grid = (props = defaultProps) => {
       </AgGridReact>
     </div>
   );
-}
-
-Grid.defaultProps = {
-  lang: 'en',
-  title: 'Default title'
 }
