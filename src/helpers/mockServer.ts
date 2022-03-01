@@ -7,7 +7,8 @@ export const createServerFunc = () => {
       this.namespace = ""
 
       this.get(endpoints.objectNoRules.url, () => {
-        return { data: endpoints.objectNoRules.mockup, pagination: { totalElements: 2000 } }
+        // @ts-ignore
+        return { data: endpoints.objectNoRules.mockup, pagination: { totalElements: endpoints.objectNoRules.mockup.data.length } }
       })
     },
   });

@@ -22,7 +22,7 @@ export const Grid = (props = defaultProps) => {
     defaultColDef: {
       resizable: true
     },
-    cacheBlockSize: 500,
+    cacheBlockSize: 1000,
     debug: false,
     ebounceVerticalScrollbar: true,
     enableCellTextSelection: true,
@@ -30,7 +30,7 @@ export const Grid = (props = defaultProps) => {
     rowSelection: 'multiple',
     rowDeselection: true,
     rowModelType: 'infinite',
-    paginationPageSize: 500,
+    paginationPageSize: 1000,
     cacheOverflowSize: 1,
     maxConcurrentDatasourceRequests: 1,
     infiniteInitialRowCount: 1000,

@@ -1,15 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Header from './components/Header';
 import Grid from './components/Grid';
 import { createServerFunc } from './helpers/mockServer';
 import { endpoints } from './helpers/consts';
 import { ResponseObjectNoRules } from './interfaces/ObjectNoRules';
+import Toolbar from './components/Toolbar';
 
+
+let totalElementsGrid: number = 0;
 function App() {
+  const [totalElements, setTotalElements] = useState(0);
+
   useEffect(() => {
     createServerFunc();
   }, []);
+
+  useEffect(() => {
+    totalElementsGrid = totalElements;
+  }, [totalElements]);
 
   // @ts-ignore
   const mockupResponse: ResponseObjectNoRules = endpoints.objectNoRules.mockup;
@@ -17,6 +26,9 @@ function App() {
   return (
     <>
       <Header title="Objects no rules" />
+      <Toolbar>
+        Search results | {totalElements === null ? '...' : totalElements}
+      </Toolbar>
       <Grid
         gridOptions={{
           columnDefs: columns.map((columnKey) => ({
@@ -34,8 +46,11 @@ function App() {
                   rowCount: null,
                   getRows: function (params: any) {
                     setTimeout( function() {
-                      const lastRow = -1;
-                      params.successCallback(response.data.data);
+                      debugger;
+                      if (!totalElementsGrid || params.startRow < totalElementsGrid) {
+                        params.successCallback(response.data.data);
+                        setTotalElements(response.pagination.totalElements);
+                      }
                     }, 500);
                   }
                 };
