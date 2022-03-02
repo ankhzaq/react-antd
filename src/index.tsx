@@ -4,13 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import ObjectsNoRules from './screens/ObjectsNoRules';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/home" element={<div>Home</div>} />
+        <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

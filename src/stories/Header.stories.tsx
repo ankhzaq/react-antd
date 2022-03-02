@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Header } from './Header';
 
 export default {
-  title: 'Example/Grid',
+  title: 'Example/PivotGrid',
   component: Header,
 } as ComponentMeta<typeof Header>;
 

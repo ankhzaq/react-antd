@@ -5,8 +5,8 @@ export const spaces = {
   standard: 15
 };
 
-const pathDataquality = '/c/s/360-dataquality';
-const patMicroNotifications = 'nbx-notifications/api/v0';
+const pathDataquality = '/api';
+const patMicroNotifications = 'notifications';
 
 export const endpoints = {
   objectNoRules: {
