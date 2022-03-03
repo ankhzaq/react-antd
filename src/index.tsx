@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ObjectsNoRules from './screens/ObjectsNoRules';
+import Hammurabi from './screens/Hammurabi';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
+        <Route path="/hammurabi" element={<Hammurabi /> } />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

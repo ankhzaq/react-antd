@@ -84,6 +84,7 @@
     "@storybook/node-logger": "^6.4.19",
     "@storybook/preset-create-react-app": "^4.0.1",
     "@storybook/react": "^6.4.19",
+    "@types/lodash": "^4.14.179",
     "@types/styled-components": "^5.1.23",
     "miragejs": "^0.1.43"
   }

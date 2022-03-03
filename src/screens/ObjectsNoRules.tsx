@@ -51,9 +51,8 @@ function ObjectsNoRules() {
                   rowCount: null,
                   getRows: function (params: any) {
                     setTimeout( function() {
-                      debugger;
                       if (!totalElementsGrid || params.startRow < totalElementsGrid) {
-                        params.successCallback(response.data.data);
+                        params.successCallback(response.data);
                         setTotalElements(response.pagination.totalElements);
                       }
                     }, 500);

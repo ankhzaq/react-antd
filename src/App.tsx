@@ -1,10 +1,7 @@
 import React from 'react';
-import PivotGrid from 'components/PivotGrid';
 
 function App() {
-  return (
-    <PivotGrid />
-  );
+  return (<div>App screen</div>);
 }
 
 export default App;
