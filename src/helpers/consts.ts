@@ -6,6 +6,10 @@ export const spaces = {
   standard: 15
 };
 
+export const heights = {
+  header: 87,
+};
+
 const pathDQ = '/api';
 const pathMicroNBX = 'nbx';
 const pathMicroNotifications = 'notifications';
@@ -13,7 +17,7 @@ const pathMicroNotifications = 'notifications';
 export const endpoints = {
   hammurabi: {
     url: `${pathDQ}/${pathMicroNBX}/pathMicroNBX`,
-    mockup: mockupObjectsNoRules
+    mockup: mockupHammurabi
   },
   objectNoRules: {
     url: `${pathDQ}/${pathMicroNotifications}/objects-without-rules`,

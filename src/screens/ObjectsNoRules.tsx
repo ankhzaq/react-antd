@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
-// @ts-ignore
 import Header from "components/Header";
-// @ts-ignore
 import Grid from 'components/Grid';
-// @ts-ignore
 import { createServerFunc } from 'helpers/mockServer';
-// @ts-ignore
 import { endpoints } from 'helpers/consts';
-// @ts-ignore
 import { ResponseObjectNoRules } from 'interfaces/ObjectNoRules';
-// @ts-ignore
 import Toolbar from 'components/Toolbar';
 
 
