@@ -10,6 +10,10 @@ export const heights = {
   header: 87,
 };
 
+export const constants = {
+  ALL: 'ALL'
+};
+
 const pathDQ = '/api';
 const pathMicroNBX = 'nbx';
 const pathMicroNotifications = 'notifications';

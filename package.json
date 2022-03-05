@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@linaria/core": "^3.0.0-beta.15",
     "@reach/router": "^1.3.4",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
