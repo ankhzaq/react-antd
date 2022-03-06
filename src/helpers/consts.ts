@@ -8,6 +8,7 @@ export const spaces = {
 
 export const heights = {
   header: 87,
+  toolbar: 53
 };
 
 export const constants = {

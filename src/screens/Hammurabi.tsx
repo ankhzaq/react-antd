@@ -4,22 +4,42 @@ import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
 import { constants, endpoints, heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
-import { Button, Checkbox, Select } from 'antd';
+import { Button, Checkbox, Descriptions, InputNumber, Select, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
 import Toolbar from 'components/Toolbar';
 
+const { Option } = Select;
+
+const GROUP_BY_COLUMNS = ['country', 'area', 'storageZone'];
+
 const defaultInfoGrid: PivotGridProps = {
   rows: [],
   columns: [],
-  groupBy: ['country', 'area', 'storageZone']
+  groupBy: GROUP_BY_COLUMNS
 };
 
 const defaultFilters = {
   area: [],
   country: [],
   storageZone: [],
+  jobsLastDayLastMonthCount: {
+    min: null,
+    max: null
+  },
+  jobsLastDayLastQuarterCount: {
+    min: null,
+    max: null
+  },
+  jobsTodayCount: {
+    min: null,
+    max: null
+  },
+  jobsYesterdayCount: {
+    min: null,
+    max: null
+  },
 };
 
 interface Filter {
@@ -32,6 +52,8 @@ function Hammurabi() {
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid);
   const [filters, setFilters] = useState<Filter>(defaultFilters);
 
+  const { rows, columns, groupBy } = infoGrid;
+
   const setNewFilters = (newFilters: any) => {
     setSessionStorage("filters", newFilters);
     setFilters(newFilters);
@@ -42,17 +64,31 @@ function Hammurabi() {
   }, [filters])
 
   const filteredRows = useMemo(() => {
+    const currentFilters: BasicObject = filters;
     return infoGrid.rows.filter((r) => {
-      const { area, country, storageZone } = r;
-      const { area: areaFilter, country: countryFilter, storageZone: storageZoneFilter } = filters;
+      // const { area, country, storageZone } = r;
+      const validRecord = columns.every(({ key }) => {
+        const valueFilter: any = currentFilters[key];
+        const valueColumn = r[key];
+        if (Array.isArray(valueFilter)) {
+          if (!valueFilter.length || valueFilter.includes(valueColumn)) return true;
+          return false
+        } else {
+          if ((!valueFilter.min || valueFilter.min <= valueColumn) && (!valueFilter.max || valueFilter.max >= valueColumn)) {
+            return true;
+          }
+          return false
+        }
+        return false;
+      });
+      return validRecord;
+      /* const { area: areaFilter, country: countryFilter, storageZone: storageZoneFilter } = filters;
       const validArea = !area || !areaFilter.length || areaFilter.includes(area);
       const validCountry = !country || !countryFilter.length || countryFilter.includes(country);
       const validStoragezone = !storageZone || !storageZoneFilter.length || storageZoneFilter.includes(storageZone);
-      return (validArea && validCountry && validStoragezone);
+      return (validArea && validCountry && validStoragezone); */
     });
   }, [infoGrid.rows, filters]);
-
-  const { rows, columns, groupBy } = infoGrid;
 
   useEffect(() => {
     createServerFunc();
@@ -62,13 +98,37 @@ function Hammurabi() {
         const rows = response.data;
         const firstElement = rows[0];
         if (firstElement) {
-          const columns = Object.keys(firstElement).filter((key) => key.includes('Count') || infoGrid.groupBy.includes(key));
+          const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key)));
           const columnsResponse = columns.map((key: string) => ({
+            headerCellClass: 'filter-cell',
             headerRenderer: (info: any) => {
               const { column: { name } } = info;
+              const currentFilters: BasicObject = getSessionStorage("filters");
               if (!infoGrid.groupBy.includes(name))
                 return (
-                  <span>{name}</span>
+                  <>
+                    <div className="flex1">{name}</div>
+                    <div className="flex">
+                      <InputNumber
+                        className="flex1"
+                        defaultValue={currentFilters[key].min}
+                        onChange={(value) => {
+                          currentFilters[key].min = value;
+                          setNewFilters(currentFilters);
+                        }}
+                        placeholder="min"
+                      />
+                      <InputNumber
+                        className="flex1"
+                        defaultValue={currentFilters[key].max}
+                        onChange={(value) => {
+                          currentFilters[key].max = value;
+                          setNewFilters(currentFilters);
+                        }}
+                        placeholder="max"
+                      />
+                    </div>
+                  </>
                 );
               const options: string[] = [];
               rows.forEach((rowInfo: any) => {
@@ -80,22 +140,24 @@ function Hammurabi() {
               const filtersSession = getSessionStorage("filters");
 
               return (
-                <Select
-                  defaultValue={filtersSession[key]}
-                  mode="multiple"
-                  onChange={(value) => {
-                    const newFilters = { ...filtersSession };
-                    // @ts-ignore
-                    newFilters[key] = value;
-                    setNewFilters(newFilters);
-                  }}
-                  placeholder={key}
-                  style={{ width: '100%' }}
-                >
-                  {options.map((option) => (
-                    <option value={option}>{option}</option>
-                  ))}
-                </Select>
+                <>
+                  <div>{key}</div>
+                  <Select
+                    defaultValue={filtersSession[key]}
+                    mode="multiple"
+                    onChange={(value) => {
+                      const newFilters = { ...filtersSession };
+                      newFilters[key] = value;
+                      setNewFilters(newFilters);
+                    }}
+                    placeholder={`${key} filter...`}
+                    style={{ width: '100%' }}
+                  >
+                    {options.map((option) => (
+                      <Option key={`${key}-${option}`} value={option}>{option}</Option>
+                    ))}
+                  </Select>
+                </>
               );
             },
             key,
@@ -133,33 +195,36 @@ function Hammurabi() {
 
   return (
     <div className="flex">
-      <div className="flex1">
-        <Header title="Hammurabi" />
-      </div>
-      {/*<Toolbar>
-        <Checkbox
-          defaultChecked={!!(infoGrid.groupBy.includes('area'))}
-          onChange={(checkbox) => {
-            const value = checkbox.target.checked;
-            let newGroupByList = infoGrid.groupBy;
-            if (value) {
-              newGroupByList.push('area');
-            } else {
-              newGroupByList = newGroupByList.filter((column) => column !== 'area');
-            }
-            setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
-          }}
-        >
-          Area
-        </Checkbox>
-      </Toolbar>*/}
+      <Header title="Hammurabi Jobs" />
+      <Toolbar>
+        {GROUP_BY_COLUMNS.map((key) => (
+          <Checkbox
+            defaultChecked={!!infoGrid.groupBy.includes(key)}
+            onChange={(checkbox) => {
+              const value = checkbox.target.checked;
+              let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
+              if (value) {
+                newGroupByList.push(key);
+              } else {
+                newGroupByList = newGroupByList.filter((column: string) => column !== key);
+              }
+              setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
+            }}
+          >
+            {key}
+          </Checkbox>
+        ))}
+      </Toolbar>
       {rows && (
         <div className="flex1">
           <PivotGrid
             columns={columns}
             groupBy={groupBy}
-            height={window.innerHeight - heights.header}
+            height={window.innerHeight - heights.header - heights.toolbar}
             rows={filteredRows}
+            restProps={{
+              headerRowHeight: 75
+            }}
           />
         </div>
       )}
