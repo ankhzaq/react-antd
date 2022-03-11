@@ -7,18 +7,7 @@ const { Content, Sider } = Layout;
 
 function App() {
   return (
-    <Layout className="site-layout-background width100 height100">
-      <Sider className="site-layout-background" width={200}>
-        <Filters filters={[
-          {
-            placeholder: "Basic usage"
-          }
-        ]} />
-      </Sider>
-      <Content>
-        <Hammurabi />
-      </Content>
-    </Layout>
+    <Hammurabi />
   );
 }
 

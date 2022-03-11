@@ -4,11 +4,13 @@ import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
 import { constants, endpoints, heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
-import { Button, Checkbox, Descriptions, InputNumber, Select, Tooltip } from 'antd';
+import { Button, Checkbox, Descriptions, InputNumber, Layout, Select, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
 import Toolbar from 'components/Toolbar';
+import Filters from 'components/Filters';
+const { Content, Sider } = Layout;
 
 const { Option } = Select;
 
@@ -82,11 +84,6 @@ function Hammurabi() {
         return false;
       });
       return validRecord;
-      /* const { area: areaFilter, country: countryFilter, storageZone: storageZoneFilter } = filters;
-      const validArea = !area || !areaFilter.length || areaFilter.includes(area);
-      const validCountry = !country || !countryFilter.length || countryFilter.includes(country);
-      const validStoragezone = !storageZone || !storageZoneFilter.length || storageZoneFilter.includes(storageZone);
-      return (validArea && validCountry && validStoragezone); */
     });
   }, [infoGrid.rows, filters]);
 
@@ -194,41 +191,79 @@ function Hammurabi() {
   }, []);
 
   return (
-    <div className="flex">
-      <Header title="Hammurabi Jobs" />
-      <Toolbar>
-        {GROUP_BY_COLUMNS.map((key) => (
-          <Checkbox
-            defaultChecked={!!infoGrid.groupBy.includes(key)}
-            onChange={(checkbox) => {
-              const value = checkbox.target.checked;
-              let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
-              if (value) {
-                newGroupByList.push(key);
-              } else {
-                newGroupByList = newGroupByList.filter((column: string) => column !== key);
-              }
-              setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
-            }}
-          >
-            {key}
-          </Checkbox>
-        ))}
-      </Toolbar>
-      {rows && (
-        <div className="flex1">
-          <PivotGrid
-            columns={columns}
-            groupBy={groupBy}
-            height={window.innerHeight - heights.header - heights.toolbar}
-            rows={filteredRows}
-            restProps={{
-              headerRowHeight: 75
-            }}
-          />
+    <Layout className="site-layout-background width100 height100">
+      <Sider className="site-layout-background" width={200}>
+        <Filters
+          filters={[
+            {
+              element: 'Input',
+              key: 'input',
+              placeholder: "Basic usage"
+            },
+            {
+              element: "Select",
+              key: 'select',
+              options: [{
+                label: 'label1',
+                value: 'value1'
+              },
+                {
+                  label: 'label2',
+                  value: 'value2'
+                }],
+            },
+            {
+              element: <div>Potatoe</div>,
+            },
+            {
+              element: "DatePicker",
+              format: "DD-MM-YYYY",
+              key: 'date',
+            }
+          ]}
+          getFilters={(filter) => {
+            console.log("filter: ", filter);
+          }}
+        />
+      </Sider>
+      <Content>
+        <div className="flex">
+          <Header title="Hammurabi Jobs" />
+          <Toolbar>
+            {GROUP_BY_COLUMNS.map((key) => (
+              <Checkbox
+                defaultChecked={!!infoGrid.groupBy.includes(key)}
+                onChange={(checkbox) => {
+                  const value = checkbox.target.checked;
+                  let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
+                  if (value) {
+                    newGroupByList.push(key);
+                  } else {
+                    newGroupByList = newGroupByList.filter((column: string) => column !== key);
+                  }
+                  setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
+                }}
+              >
+                {key}
+              </Checkbox>
+            ))}
+          </Toolbar>
+          {rows && (
+            <div className="flex1">
+              <PivotGrid
+                columns={columns}
+                groupBy={groupBy}
+                height={window.innerHeight - heights.header - heights.toolbar}
+                rows={filteredRows}
+                restProps={{
+                  headerRowHeight: 75
+                }}
+              />
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </Content>
+    </Layout>
   );
 }
 
