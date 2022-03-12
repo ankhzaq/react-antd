@@ -19,7 +19,12 @@ code {
   width: 100%;
 }
 
-.flex {
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
   display: flex;
   flex-direction: column;
 }
@@ -34,4 +39,8 @@ code {
 
 .height100 {
   height: 100%;
+}
+
+.marginTop {
+  margin: 10px 0px;
 }

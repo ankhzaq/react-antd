@@ -60,6 +60,7 @@ export const Filters = (props = defaultProps) => {
         if (element === "Select") {
           return (
             <Select
+              className="marginTop"
               { ...infoFilterParams }
             >
               {infoFilter.options && (
@@ -74,6 +75,7 @@ export const Filters = (props = defaultProps) => {
         if (element === "DatePicker") {
           return (
             <DatePicker
+              className="marginTop"
               { ...infoFilterParams }
             />
           );
@@ -82,13 +84,14 @@ export const Filters = (props = defaultProps) => {
         if (element === "TimePicker") {
           return (
             <TimePicker
+              className="marginTop"
               { ...infoFilterParams }
             />
           );
         }
 
         return (
-          <Input {...infoFilterParams} />
+          <Input className="marginTop" {...infoFilterParams} />
         );
       })}
     </Layout>

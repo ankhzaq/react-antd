@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import Header from "components/Header";
 import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
@@ -10,6 +10,7 @@ import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
 import Toolbar from 'components/Toolbar';
 import Filters from 'components/Filters';
+import { reducer } from '../helpers/store';
 const { Content, Sider } = Layout;
 
 const { Option } = Select;
@@ -50,7 +51,13 @@ interface Filter {
   storageZone: string[];
 }
 
+const SCREEN = 'hammurabi';
+const ELEMENTS = ['grid'];
+
 function Hammurabi() {
+
+  const [state, dispatch] = useReducer(reducer, {});
+
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid);
   const [filters, setFilters] = useState<Filter>(defaultFilters);
 
@@ -89,11 +96,13 @@ function Hammurabi() {
 
   useEffect(() => {
     createServerFunc();
+    dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
     fetch(endpoints.hammurabi.url)
       .then((resp) => resp.json())
       .then((response) => {
         const rows = response.data;
         const firstElement = rows[0];
+        dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
         if (firstElement) {
           const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key)));
           const columnsResponse = columns.map((key: string) => ({
@@ -227,7 +236,7 @@ function Hammurabi() {
         />
       </Sider>
       <Content>
-        <div className="flex">
+        <div className="flex-column">
           <Header title="Hammurabi Jobs" />
           <Toolbar>
             {GROUP_BY_COLUMNS.map((key) => (

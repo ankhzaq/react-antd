@@ -1,5 +1,6 @@
 import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
 import mockupHammurabi from '../mockups/hammurabi.json';
+import { BasicObject } from '../interfaces/common';
 
 export const spaces = {
   header: 20,
@@ -19,7 +20,7 @@ const pathDQ = '/api';
 const pathMicroNBX = 'nbx';
 const pathMicroNotifications = 'notifications';
 
-export const endpoints = {
+export const endpoints: BasicObject = {
   hammurabi: {
     url: `${pathDQ}/${pathMicroNBX}/pathMicroNBX`,
     mockup: mockupHammurabi
