@@ -61,11 +61,12 @@ export const Filters = (props = defaultProps) => {
           return (
             <Select
               className="marginTop"
+              key={key}
               { ...infoFilterParams }
             >
               {infoFilter.options && (
                 infoFilter.options.map((info: any) => (
-                  <Select.Option {...info}>{info.label}</Select.Option>
+                  <Select.Option key={`${key}-option-${info.key || info.value || info.label}`} {...info}>{info.label}</Select.Option>
                 ))
               )}
             </Select>
@@ -76,6 +77,7 @@ export const Filters = (props = defaultProps) => {
           return (
             <DatePicker
               className="marginTop"
+              key={key}
               { ...infoFilterParams }
             />
           );
@@ -85,13 +87,18 @@ export const Filters = (props = defaultProps) => {
           return (
             <TimePicker
               className="marginTop"
+              key={key}
               { ...infoFilterParams }
             />
           );
         }
 
         return (
-          <Input className="marginTop" {...infoFilterParams} />
+          <Input
+            className="marginTop"
+            key={key}
+            {...infoFilterParams}
+          />
         );
       })}
     </Layout>

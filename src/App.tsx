@@ -1,13 +1,15 @@
 import React from 'react';
-import Filters from 'components/Filters';
-import { Layout } from 'antd';
 import Hammurabi from './screens/Hammurabi';
-
-const { Content, Sider } = Layout;
+import { Route, Routes } from 'react-router-dom';
+import ObjectsNoRules from './screens/ObjectsNoRules';
 
 function App() {
   return (
-    <Hammurabi />
+    <Routes>
+      <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
+      <Route path="/hammurabi" element={<Hammurabi /> } />
+      <Route path="/" element={<App />} />
+    </Routes>
   );
 }
 

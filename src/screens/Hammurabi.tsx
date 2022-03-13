@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
+import { useReducer, useState } from 'reinspect';
+import React, { useEffect, useMemo } from 'react';
 import Header from "components/Header";
 import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
@@ -58,8 +59,8 @@ function Hammurabi() {
 
   const [state, dispatch] = useReducer(reducer, {});
 
-  const [infoGrid, setInfoGrid] = useState(defaultInfoGrid);
-  const [filters, setFilters] = useState<Filter>(defaultFilters);
+  const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
+  const [filters, setFilters] = useState<Filter>(defaultFilters, "filterGrid");
 
   const { rows, columns, groupBy } = infoGrid;
 
@@ -96,6 +97,7 @@ function Hammurabi() {
 
   useEffect(() => {
     createServerFunc();
+    debugger;
     dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
     fetch(endpoints.hammurabi.url)
       .then((resp) => resp.json())
@@ -222,9 +224,6 @@ function Hammurabi() {
                 }],
             },
             {
-              element: <div>Potatoe</div>,
-            },
-            {
               element: "DatePicker",
               format: "DD-MM-YYYY",
               key: 'date',
@@ -242,6 +241,7 @@ function Hammurabi() {
             {GROUP_BY_COLUMNS.map((key) => (
               <Checkbox
                 defaultChecked={!!infoGrid.groupBy.includes(key)}
+                key={key}
                 onChange={(checkbox) => {
                   const value = checkbox.target.checked;
                   let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
