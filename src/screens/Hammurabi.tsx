@@ -1,5 +1,6 @@
-import { useReducer, useState } from 'reinspect';
 import React, { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux'
+import { useReducer, useState } from 'reinspect';
 import Header from "components/Header";
 import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
@@ -57,7 +58,10 @@ const ELEMENTS = ['grid'];
 
 function Hammurabi() {
 
-  const [state, dispatch] = useReducer(reducer, {});
+  const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
+
+  const stateRedux = useSelector((state) => state)
+  console.log("stateRedux: ", stateRedux);
 
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
   const [filters, setFilters] = useState<Filter>(defaultFilters, "filterGrid");
@@ -97,7 +101,6 @@ function Hammurabi() {
 
   useEffect(() => {
     createServerFunc();
-    debugger;
     dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
     fetch(endpoints.hammurabi.url)
       .then((resp) => resp.json())

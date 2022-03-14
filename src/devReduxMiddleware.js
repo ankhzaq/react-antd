@@ -1,22 +1,14 @@
 import env from "react-dotenv";
 /* eslint-disable max-len */
-const LOCAL_STORAGE_STATUS_KEY = '_devRedux.storedStatus';
 
 /**
  * Get the state from the appropriate LocalStorage key.
  * @returns {Object} An object containing the previously persisted state, if any; null otherwise.
  */
 const getState = () => {
-  const persistedData = localStorage.getItem(LOCAL_STORAGE_STATUS_KEY);
-
-  if (persistedData) {
-    try {
-      return JSON.parse(persistedData);
-    } catch (exception) {
-      return null;
-    }
-  }
-  return null;
+  const sessionApp = sessionStorage.getItem("reactAntd");
+  if (!sessionApp) return {};
+  return JSON.parse(sessionApp);
 };
 
 /**
@@ -26,7 +18,8 @@ const getState = () => {
  * @returns {Boolean} True if persisted/removed correctly; false otherwise.
  */
 const saveState = (state = {}) => {
-  const toPersistData = JSON.stringify(state);
+  debugger;
+  /*const toPersistData = JSON.stringify(state);
 
   if (toPersistData) {
     try {
@@ -42,7 +35,7 @@ const saveState = (state = {}) => {
     } catch (Ex) {
       return null;
     }
-  }
+  }*/
 };
 
 /**

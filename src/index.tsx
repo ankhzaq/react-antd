@@ -9,8 +9,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import devReduxMiddleware from './devReduxMiddleware';
 import { reducer } from './helpers/store';
 import { Provider } from 'react-redux';
-import { getSessionStorage } from 'helpers/sessionStorage';
 import { BasicObject } from 'interfaces/common';
+import { StateInspector } from 'reinspect';
 
 /** Redux DevTools extensions - Debug Redux code in Chrome * */
 const composeEnhancers = composeWithDevTools({ trace: true, traceLimit: 25 });
@@ -29,11 +29,13 @@ const store = createStore(
 
 ReactDOM.render(
     <React.StrictMode>
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
+      <StateInspector name="AppDQ">
+        <Provider store={store}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </Provider>
+      </StateInspector>
     </React.StrictMode>,
   document.getElementById('root')
 );
