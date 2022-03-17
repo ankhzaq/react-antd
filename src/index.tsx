@@ -9,23 +9,31 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import devReduxMiddleware from './devReduxMiddleware';
 import { reducer } from './helpers/store';
 import { Provider } from 'react-redux';
+import moduleSagas from './store/sagas/sagas';
+
 import { BasicObject } from 'interfaces/common';
 import { StateInspector } from 'reinspect';
+import createSagaMiddleware from '@redux-saga/core';
 
 /** Redux DevTools extensions - Debug Redux code in Chrome * */
 const composeEnhancers = composeWithDevTools({ trace: true, traceLimit: 25 });
 const devReduxMiddlewareInstance: BasicObject = devReduxMiddleware();
 const initialState = devReduxMiddlewareInstance.getState() ;
 
+const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(
   reducer,
   initialState,
   composeEnhancers(
     applyMiddleware(
+      sagaMiddleware,
       devReduxMiddlewareInstance.middleware,
     ),
   ),
 )
+
+sagaMiddleware.run(moduleSagas);
 
 ReactDOM.render(
     <React.StrictMode>

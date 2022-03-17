@@ -1,18 +1,22 @@
+// @ts-ignore
+// @ts-ignore
+
 import React, { useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useReducer, useState } from 'reinspect';
 import Header from "components/Header";
 import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
-import { constants, endpoints, heights } from '../helpers/consts';
+import { endpoints, heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
-import { Button, Checkbox, Descriptions, InputNumber, Layout, Select, Tooltip } from 'antd';
+import { Button, Checkbox, InputNumber, Layout, Modal, Select } from 'antd';
 import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
 import Toolbar from 'components/Toolbar';
 import Filters from 'components/Filters';
 import { reducer } from '../helpers/store';
+import ModalComponent, { ModalInfoInterface } from 'components/Modal/ModalComponent';
 const { Content, Sider } = Layout;
 
 const { Option } = Select;
@@ -56,15 +60,27 @@ interface Filter {
 const SCREEN = 'hammurabi';
 const ELEMENTS = ['grid'];
 
-function Hammurabi() {
+const initialModalInfo: ModalInfoInterface = {};
+
+function Hammurabi(props: any) {
+
+  const { getData } = props;
 
   const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
 
   const stateRedux = useSelector((state) => state)
-  console.log("stateRedux: ", stateRedux);
+
+  const [modalInfo, setInfoModal] = useState(initialModalInfo, "modalInfo");
 
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
   const [filters, setFilters] = useState<Filter>(defaultFilters, "filterGrid");
+
+  useEffect(() => {
+    getData();
+    setTimeout(() => {
+      setInfoModal({ type: 'info' });
+    }, 1000)
+  }, []);
 
   const { rows, columns, groupBy } = infoGrid;
 
@@ -206,6 +222,7 @@ function Hammurabi() {
 
   return (
     <Layout className="site-layout-background width100 height100">
+      <ModalComponent {...modalInfo} />
       <Sider className="site-layout-background" width={200}>
         <Filters
           filters={[
@@ -279,4 +296,12 @@ function Hammurabi() {
   );
 }
 
-export default Hammurabi;
+const mapStateToProps = (state: any) => ({ });
+const mapDispatchToProps = (dispatch: any) => ({
+  getData: () => dispatch({
+    type: 'hammurabi_grid_requested',
+    payload: {}
+  })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Hammurabi);
