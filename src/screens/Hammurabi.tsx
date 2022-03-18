@@ -1,6 +1,3 @@
-// @ts-ignore
-// @ts-ignore
-
 import React, { useEffect, useMemo } from 'react';
 import { connect, useSelector } from 'react-redux'
 import { useReducer, useState } from 'reinspect';
@@ -75,12 +72,13 @@ function Hammurabi(props: any) {
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
   const [filters, setFilters] = useState<Filter>(defaultFilters, "filterGrid");
 
-  useEffect(() => {
+  // SHOW MODAL
+  /*useEffect(() => {
     getData();
     setTimeout(() => {
       setInfoModal({ type: 'info' });
     }, 1000)
-  }, []);
+  }, []);*/
 
   const { rows, columns, groupBy } = infoGrid;
 
@@ -223,37 +221,6 @@ function Hammurabi(props: any) {
   return (
     <Layout className="site-layout-background width100 height100">
       <ModalComponent {...modalInfo} />
-      <Sider className="site-layout-background" width={200}>
-        <Filters
-          filters={[
-            {
-              element: 'Input',
-              key: 'input',
-              placeholder: "Basic usage"
-            },
-            {
-              element: "Select",
-              key: 'select',
-              options: [{
-                label: 'label1',
-                value: 'value1'
-              },
-                {
-                  label: 'label2',
-                  value: 'value2'
-                }],
-            },
-            {
-              element: "DatePicker",
-              format: "DD-MM-YYYY",
-              key: 'date',
-            }
-          ]}
-          getFilters={(filter) => {
-            console.log("filter: ", filter);
-          }}
-        />
-      </Sider>
       <Content>
         <div className="flex-column">
           <Header title="Hammurabi Jobs" />
