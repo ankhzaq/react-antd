@@ -1,7 +1,9 @@
-import 'antd/dist/antd.css';
-import { Button, DatePicker, Input, Layout, Select, TimePicker, Menu, Dropdown, Space } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button, DatePicker, Input, Layout, Select, TimePicker, Menu, Dropdown } from 'antd';
+
 import { BasicObject } from 'interfaces/common';
-import { useState } from 'react';
+import 'antd/dist/antd.css';
+import { parseFilterObject, parseFilterString } from '../../helpers/filters';
 
 const { Sider } = Layout;
 
@@ -33,29 +35,19 @@ const setFilters = (props: filtersElement) => {
   };
 }
 
-
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-        1st menu item
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-        2nd menu item
-      </a>
-    </Menu.Item>
-    <DatePicker
-      className="marginTop"
-    />
-  </Menu>
-);
+function getDefaultFilters() {
+  if (window.location.search.length && window.location.search.includes('?search=')) {
+    return parseFilterString(window.location.search.replace('?search=', ''));
+  }
+  return {};
+}
 
 export const Filters = (props = defaultProps) => {
   const { filters, mode, getFilters } = props;
 
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+
+  const defaultFilters = getDefaultFilters();
 
   const filtersContent = filters.map((infoFilter: any) => {
           const { element, key, onChange } = infoFilter;
@@ -80,6 +72,9 @@ export const Filters = (props = defaultProps) => {
               if (getFilters) {
                 getFilters(filtersParsed);
               }
+
+              // add filter in the url
+              window.history.pushState('', '', `?search=${parseFilterObject(filtersParsed)}`);
             }
           };
 
@@ -87,6 +82,7 @@ export const Filters = (props = defaultProps) => {
             return (
               <Select
                 className="marginTop width100"
+                defaultValue={defaultFilters[key] || ''}
                 key={key}
                 { ...infoFilterParams }
               >
@@ -113,6 +109,7 @@ export const Filters = (props = defaultProps) => {
             return (
               <TimePicker
                 className="marginTop width100"
+                value={defaultFilters[key] || ''}
                 key={key}
                 { ...infoFilterParams }
               />
@@ -122,6 +119,7 @@ export const Filters = (props = defaultProps) => {
           return (
             <Input
               className="marginTop"
+              defaultValue={defaultFilters[key] || ''}
               key={key}
               {...infoFilterParams}
             />
