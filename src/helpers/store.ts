@@ -1,6 +1,6 @@
 import { endpoints } from './consts';
 import { ActionReducer, BasicObject } from '../interfaces/common';
-import { setSessionStorage } from './sessionStorage';
+import { getSessionStorage, setSessionStorage } from './sessionStorage';
 
 export const NAME_SESSION_APP = "reactAntd";
 
@@ -10,53 +10,50 @@ export const call = async (endpoint: string) => {
     .catch((err) => err);
 }
 
-export function reducer(state: BasicObject = {}, action: ActionReducer) {
-  const { type, payload, screen, elements } = action;
-  const nextState = state;
-  if (screen && elements) {
-    elements.forEach((element) => {
-      if (type === `${screen}_${element}`) {
-        nextState[element] = payload;
-      } else if (type === `${screen}_${element}_failed`) {
-        const currentStateElement = state[element] || {};
-        nextState[element] = { ...currentStateElement, loading: false, ...payload };
-      } else if (type === `${screen}_${element}_requested`) {
-        const currentStateElement = state[element] || {};
-        nextState[element] = { ...currentStateElement, loading: true, error: null, data: null };
-      } else if (type === `${screen}_${element}_succeeded`) {
-        const currentStateElement = state[element] || {};
-        const nextState = state;
-        nextState[element] = { ...currentStateElement, loading: false, error: null, ...payload };
-        return nextState;
-      }
-    });
-    setSessionStorage(screen, nextState);
-  }
-  return nextState;
+const ELEMENTS_BY_SCREEN: BasicObject = {
+  hammurabi: ['filters', 'grid']
 }
 
-export function rootReducer(state: BasicObject = {}, action: ActionReducer) {
-  const { type, payload } = action;
-  const screen = 'hammurabi';
-  const elements = ['grid'];
-  const nextState = state;
-  elements.forEach((element) => {
-    if (type === `${screen}_${element}`) {
-      nextState[element] = payload;
-    } else if (type === `${screen}_${element}_failed`) {
-      const currentStateElement = state[element] || {};
-      nextState[element] = { ...currentStateElement, loading: false, ...payload };
-    } else if (type === `${screen}_${element}_requested`) {
-      const currentStateElement = state[element] || {};
-      nextState[element] = { ...currentStateElement, loading: true, error: null, data: null };
-    } else if (type === `${screen}_${element}_succeeded`) {
-      const currentStateElement = state[element] || {};
-      const nextState = state;
-      nextState[element] = { ...currentStateElement, loading: false, error: null, ...payload };
-      return nextState;
+export const initState: BasicObject = {
+  common: {
+    rules: {
+      data: {}
     }
-  });
+  },
+  hammurabi: {
+    filters: {},
+    grid: {}
+  },
+  objectsNoRules: {
+    grid: {}
+  }
+}
 
-  setSessionStorage(screen, nextState);
-  return nextState;
+export function reducer(state = initState, action: ActionReducer) {
+  const { type, payload } = action;
+  let nextState = state;
+  if (type === '@@INIT' || !Object.keys(state).length) {
+    nextState = getSessionStorage();
+  }
+
+  const screensKeys: string[] = Object.keys(ELEMENTS_BY_SCREEN);
+  screensKeys.forEach((screenKey: string) => {
+    const elements = ELEMENTS_BY_SCREEN[screenKey];
+    elements.forEach((element: string) => {
+      const screenState = nextState[screenKey];
+      if (!screenState) debugger;
+      const currentStateElement = screenState[element];
+
+      if (type === `${screenKey}_${element}`) {
+        screenState[element] = payload;
+      } else if (type === `${screenKey}_${element}_failed`) {
+        screenState[element] = { ...currentStateElement, loading: false, ...payload };
+      } else if (type === `${screenKey}_${element}_requested`) {
+        screenState[element] = { ...currentStateElement, loading: true, error: null, data: null };
+      } else if (type === `${screenKey}_${element}_succeeded`) {
+        screenState[element] = { ...currentStateElement, loading: false, error: null, ...payload };
+      }
+    });
+  });
+  return setSessionStorage(null, nextState);
 }

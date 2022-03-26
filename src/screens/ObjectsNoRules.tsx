@@ -5,11 +5,24 @@ import { createServerFunc } from 'helpers/mockServer';
 import { endpoints } from 'helpers/consts';
 import { ResponseObjectNoRules } from 'interfaces/ObjectNoRules';
 import Toolbar from 'components/Toolbar';
+import { useSelector } from 'react-redux';
+import { setSessionStorage } from '../helpers/sessionStorage';
 
 
 let totalElementsGrid: number = 0;
 function ObjectsNoRules() {
+
+  const { objectsNoRules = {} } = useSelector((state: any) => state);
+
   const [totalElements, setTotalElements] = useState(0);
+
+  const setStorage = (data: any[] | null, totalElements: number | null) => {
+    const nextState = { ...objectsNoRules };
+    if (!nextState.grid) nextState.grid = { data: {}, };
+    nextState.grid.data = { data, totalElements }
+    // it doesn't make sense save it in the store
+    // setSessionStorage("objectNoRules", nextState);
+  }
 
   useEffect(() => {
     createServerFunc();
@@ -48,6 +61,7 @@ function ObjectsNoRules() {
                       if (!totalElementsGrid || params.startRow < totalElementsGrid) {
                         params.successCallback(response.data);
                         setTotalElements(response.pagination.totalElements);
+                        setStorage(response.data, response.pagination.totalElements);
                       }
                     }, 500);
                   }

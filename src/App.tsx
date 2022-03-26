@@ -5,8 +5,19 @@ import ObjectsNoRules from './screens/ObjectsNoRules';
 import DockLayout from 'rc-dock'
 import "rc-dock/dist/rc-dock.css";
 import Filters from 'components/Filters';
+import moment from 'moment';
+import { useWillMount } from './hooks';
+import { initializeStore } from './helpers/sessionStorage';
+import env from 'react-dotenv';
+import { createServerFunc } from './helpers/mockServer';
 
 function App() {
+
+  useWillMount(() => {
+    initializeStore();
+    if (env.MOCKS !== "false") createServerFunc();
+  });
+
   return (
     <Routes>
       <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
@@ -45,6 +56,14 @@ function App() {
                                 element: "DatePicker",
                                 format: "DD-MM-YYYY",
                                 key: 'date',
+                                defaultValue: moment()
+                              }
+                              ,
+                              {
+                                element: "DatePicker",
+                                format: "YYYY-MM-DD HH:mm:ss",
+                                key: 'datetime',
+                                showTime: { format: 'HH:mm:ss' }
                               }
                             ]}
                             getFilters={(filter) => {

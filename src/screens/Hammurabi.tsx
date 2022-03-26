@@ -26,28 +26,6 @@ const defaultInfoGrid: PivotGridProps = {
   groupBy: GROUP_BY_COLUMNS
 };
 
-const defaultFilters = {
-  area: [],
-  country: [],
-  storageZone: [],
-  jobsLastDayLastMonthCount: {
-    min: null,
-    max: null
-  },
-  jobsLastDayLastQuarterCount: {
-    min: null,
-    max: null
-  },
-  jobsTodayCount: {
-    min: null,
-    max: null
-  },
-  jobsYesterdayCount: {
-    min: null,
-    max: null
-  },
-};
-
 interface Filter {
   area: string[];
   country: string[];
@@ -61,35 +39,31 @@ const initialModalInfo: ModalInfoInterface = {};
 
 function Hammurabi(props: any) {
 
+  const { hammurabi } = useSelector((state: any) => state);
+
   const { getData } = props;
 
   const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
 
   const stateRedux = useSelector((state) => state)
 
-  const [modalInfo, setInfoModal] = useState(initialModalInfo, "modalInfo");
+  const [modalInfo] = useState(initialModalInfo, "modalInfo");
 
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
-  const [filters, setFilters] = useState<Filter>(defaultFilters, "filterGrid");
+  const [filters, setFilters] = useState<Filter>(hammurabi.filters, "filterGrid");
 
   // SHOW MODAL
-  /*useEffect(() => {
+  useEffect(() => {
     getData();
-    setTimeout(() => {
-      setInfoModal({ type: 'info' });
-    }, 1000)
-  }, []);*/
+  }, []);
 
   const { rows, columns, groupBy } = infoGrid;
 
   const setNewFilters = (newFilters: any) => {
-    setSessionStorage("filters", newFilters);
+    hammurabi.filters = newFilters;
+    setSessionStorage("hammurabi", hammurabi);
     setFilters(newFilters);
   }
-
-  useEffect(() => {
-    setSessionStorage("filters", filters);
-  }, [filters])
 
   const filteredRows = useMemo(() => {
     const currentFilters: BasicObject = filters;
@@ -102,7 +76,7 @@ function Hammurabi(props: any) {
           if (!valueFilter.length || valueFilter.includes(valueColumn)) return true;
           return false
         } else {
-          if ((!valueFilter.min || valueFilter.min <= valueColumn) && (!valueFilter.max || valueFilter.max >= valueColumn)) {
+          if ((!valueFilter || valueFilter.min || valueFilter.min <= valueColumn) && (!valueFilter || !valueFilter.max || valueFilter.max >= valueColumn)) {
             return true;
           }
           return false
@@ -128,7 +102,7 @@ function Hammurabi(props: any) {
             headerCellClass: 'filter-cell',
             headerRenderer: (info: any) => {
               const { column: { name } } = info;
-              const currentFilters: BasicObject = getSessionStorage("filters");
+              const currentFilters: BasicObject = getSessionStorage("hammurabi");
               if (!infoGrid.groupBy.includes(name))
                 return (
                   <>
@@ -136,8 +110,14 @@ function Hammurabi(props: any) {
                     <div className="flex">
                       <InputNumber
                         className="flex1"
-                        defaultValue={currentFilters[key].min}
+                        defaultValue={currentFilters[key] && currentFilters[key].min}
                         onChange={(value) => {
+                          if (!currentFilters[key]) {
+                            currentFilters[key] = {
+                              min: 0,
+                              max: 0
+                            };
+                          }
                           currentFilters[key].min = value;
                           setNewFilters(currentFilters);
                         }}
@@ -145,8 +125,14 @@ function Hammurabi(props: any) {
                       />
                       <InputNumber
                         className="flex1"
-                        defaultValue={currentFilters[key].max}
+                        defaultValue={currentFilters[key] && currentFilters[key].max}
                         onChange={(value) => {
+                          if (!currentFilters[key]) {
+                            currentFilters[key] = {
+                              min: 0,
+                              max: 0
+                            };
+                          }
                           currentFilters[key].max = value;
                           setNewFilters(currentFilters);
                         }}
@@ -162,13 +148,13 @@ function Hammurabi(props: any) {
                 if (value && !alreadyExist) options.push(value);
               });
 
-              const filtersSession = getSessionStorage("filters");
+              const filtersSession = getSessionStorage("hammurabi").filters;
 
               return (
                 <>
                   <div>{key}</div>
                   <Select
-                    defaultValue={filtersSession[key]}
+                    defaultValue={filtersSession && filtersSession[key]}
                     mode="multiple"
                     onChange={(value) => {
                       const newFilters = { ...filtersSession };

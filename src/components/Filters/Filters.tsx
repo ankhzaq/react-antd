@@ -4,6 +4,7 @@ import { Button, DatePicker, Input, Layout, Select, TimePicker, Menu, Dropdown }
 import { BasicObject } from 'interfaces/common';
 import 'antd/dist/antd.css';
 import { parseFilterObject, parseFilterString } from '../../helpers/filters';
+import moment from 'moment';
 
 const { Sider } = Layout;
 
@@ -100,6 +101,7 @@ export const Filters = (props = defaultProps) => {
               <DatePicker
                 className="marginTop width100"
                 key={key}
+                defaultValue={defaultFilters[key] ? moment(defaultFilters[key]) : null}
                 { ...infoFilterParams }
               />
             );
@@ -109,6 +111,7 @@ export const Filters = (props = defaultProps) => {
             return (
               <TimePicker
                 className="marginTop width100"
+                defaultValue={defaultFilters[key] ? moment(defaultFilters[key]) : moment()}
                 value={defaultFilters[key] || ''}
                 key={key}
                 { ...infoFilterParams }

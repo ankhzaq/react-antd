@@ -1,21 +1,31 @@
-import { NAME_SESSION_APP } from './store';
+import { initState, NAME_SESSION_APP } from './store';
 
 export const getSessionStorage = (key?: string) => {
   const sessionApp = sessionStorage.getItem(NAME_SESSION_APP);
-  if (!sessionApp) return {};
+  if (!sessionApp) return initState;
   if (!key) return JSON.parse(sessionApp);
 
   const sessionParsed = JSON.parse(sessionApp);
   return sessionParsed[key] || {};
 }
 
-export const setSessionStorage = (key: string, data: any) => {
+export const setSessionStorage = (key: string | null, data: any) => {
   const stateApp = getSessionStorage();
-  if (!stateApp) {
-    sessionStorage.setItem(NAME_SESSION_APP, "{}");
+  if (data) {
+    if (key) {
+      stateApp[key] = data;
+      sessionStorage.setItem(NAME_SESSION_APP, JSON.stringify(stateApp));
+    } else {
+      sessionStorage.setItem(NAME_SESSION_APP, JSON.stringify(data));
+      return data;
+    }
   }
-  if (key && data) {
-    stateApp[key] = data;
-    sessionStorage.setItem(NAME_SESSION_APP, JSON.stringify(stateApp));
+  return stateApp;
+}
+
+export const initializeStore = () => {
+  const sessionApp = sessionStorage.getItem(NAME_SESSION_APP);
+  if (!sessionApp) {
+    sessionStorage.setItem(NAME_SESSION_APP, JSON.stringify(initState));
   }
 }
