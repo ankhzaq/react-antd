@@ -14,6 +14,8 @@ import Toolbar from 'components/Toolbar';
 import Filters from 'components/Filters';
 import { reducer } from '../helpers/store';
 import ModalComponent, { ModalInfoInterface } from 'components/Modal/ModalComponent';
+import Graphics from 'components/Hammurabi/Graphics';
+import GraphicsRules from 'components/Hammurabi/GraphicsRules';
 const { Content, Sider } = Layout;
 
 const { Option } = Select;
@@ -41,11 +43,12 @@ function Hammurabi(props: any) {
 
   const { hammurabi } = useSelector((state: any) => state);
 
+  console.log("hammurabi2");
+  console.log(hammurabi);
+
   const { getData } = props;
 
   const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
-
-  const stateRedux = useSelector((state) => state)
 
   const [modalInfo] = useState(initialModalInfo, "modalInfo");
 
@@ -210,6 +213,8 @@ function Hammurabi(props: any) {
       <Content>
         <div className="flex-column">
           <Header title="Hammurabi Jobs" />
+          <Graphics />
+          <GraphicsRules />
           <Toolbar>
             {GROUP_BY_COLUMNS.map((key) => (
               <Checkbox
@@ -248,8 +253,6 @@ function Hammurabi(props: any) {
     </Layout>
   );
 }
-
-const mapStateToProps = (state: any) => ({ });
 const mapDispatchToProps = (dispatch: any) => ({
   getData: () => dispatch({
     type: 'hammurabi_grid_requested',
@@ -257,4 +260,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   })
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Hammurabi);
+export default connect(null, mapDispatchToProps)(Hammurabi);

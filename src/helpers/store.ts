@@ -11,7 +11,7 @@ export const call = async (endpoint: string) => {
 }
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
-  hammurabi: ['filters', 'grid']
+  hammurabi: ['filters', 'grid', 'graphicRules'],
 }
 
 export const initState: BasicObject = {
@@ -55,5 +55,6 @@ export function reducer(state = initState, action: ActionReducer) {
       }
     });
   });
-  return setSessionStorage(null, nextState);
+  const nextReduxState = setSessionStorage(null, nextState);
+  return nextReduxState;
 }

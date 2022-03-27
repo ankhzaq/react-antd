@@ -6,11 +6,10 @@ export const createServerFunc = () => {
     routes() {
       this.namespace = ""
 
-      this.get(endpoints.objectNoRules.url, () => {
-        return endpoints.objectNoRules.mockup;
-      });
-      this.get(endpoints.hammurabi.url, () => {
-        return endpoints.hammurabi.mockup;
+      Object.keys(endpoints).forEach((endpointKey: string) => {
+        this.get(endpoints[endpointKey].url, () => {
+          return endpoints[endpointKey].mockup;
+        });
       });
     },
   });
