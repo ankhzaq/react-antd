@@ -54,6 +54,7 @@ function Hammurabi(props: any) {
 
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
   const [filters, setFilters] = useState<Filter>(hammurabi.filters, "filterGrid");
+  const [showGraphics, setShowGraphics] = useState(false, 'hammurabiGraphic');
 
   // SHOW MODAL
   useEffect(() => {
@@ -213,40 +214,63 @@ function Hammurabi(props: any) {
       <Content>
         <div className="flex-column">
           <Header title="Hammurabi Jobs" />
-          <Graphics />
-          <GraphicsRules />
-          <Toolbar>
-            {GROUP_BY_COLUMNS.map((key) => (
-              <Checkbox
-                defaultChecked={!!infoGrid.groupBy.includes(key)}
-                key={key}
-                onChange={(checkbox) => {
-                  const value = checkbox.target.checked;
-                  let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
-                  if (value) {
-                    newGroupByList.push(key);
-                  } else {
-                    newGroupByList = newGroupByList.filter((column: string) => column !== key);
-                  }
-                  setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
-                }}
-              >
-                {key}
-              </Checkbox>
-            ))}
-          </Toolbar>
-          {rows && (
-            <div className="flex1">
-              <PivotGrid
-                columns={columns}
-                groupBy={groupBy}
-                height={window.innerHeight - heights.header - heights.toolbar}
-                rows={filteredRows}
-                restProps={{
-                  headerRowHeight: 75
-                }}
-              />
-            </div>
+          {showGraphics ? (
+            <>
+              <Toolbar>
+                <Button
+                  onClick={() => {
+                    setShowGraphics(false);
+                  }}
+                >
+                  Show Table
+                </Button>
+              </Toolbar>
+              <Graphics />
+              <GraphicsRules />
+            </>
+          ) : (
+            <>
+              <Toolbar>
+                {GROUP_BY_COLUMNS.map((key) => (
+                  <Checkbox
+                    defaultChecked={!!infoGrid.groupBy.includes(key)}
+                    key={key}
+                    onChange={(checkbox) => {
+                      const value = checkbox.target.checked;
+                      let newGroupByList: string[] = JSON.parse(JSON.stringify(infoGrid.groupBy));
+                      if (value) {
+                        newGroupByList.push(key);
+                      } else {
+                        newGroupByList = newGroupByList.filter((column: string) => column !== key);
+                      }
+                      setInfoGrid({ ...infoGrid, groupBy: newGroupByList });
+                    }}
+                  >
+                    {key}
+                  </Checkbox>
+                ))}
+                <Button
+                  onClick={() => {
+                    setShowGraphics(true);
+                  }}
+                >
+                  Show Hammurabi Graphics
+                </Button>
+              </Toolbar>
+              {rows && (
+                <div className="flex1">
+                  <PivotGrid
+                    columns={columns}
+                    groupBy={groupBy}
+                    height={window.innerHeight - heights.header - heights.toolbar}
+                    rows={filteredRows}
+                    restProps={{
+                      headerRowHeight: 75
+                    }}
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       </Content>

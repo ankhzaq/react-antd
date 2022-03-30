@@ -10,6 +10,7 @@ import { useWillMount } from './hooks';
 import { initializeStore } from './helpers/sessionStorage';
 import env from 'react-dotenv';
 import { createServerFunc } from './helpers/mockServer';
+import StringJsonCommentted from 'components/StringJsonCommentted';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/playground" element={<StringJsonCommentted /> } />
       <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
       <Route path="/" element={
         <DockLayout
