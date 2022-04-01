@@ -1,20 +1,19 @@
 import 'antd/dist/antd.css';
 import './style.css';
 import { Comment, Button, Form, Input, Modal } from 'antd';
+import styled from 'styled-components';
 import { useState } from 'react';
+import moment from 'moment';
+import { CommentOutlined } from '@ant-design/icons';
+import { BasicObject } from '../../interfaces/common';
 
 const { TextArea } = Input;
 
 // @ts-ignore
-const Editor = ({ onSubmit }) => (
+const Editor = ({ defaultValue, onChange }) => (
   <>
     <Form.Item>
-      <TextArea rows={4} />
-    </Form.Item>
-    <Form.Item>
-      <Button htmlType="submit" onClick={onSubmit} type="primary">
-        Add Comment
-      </Button>
+      <TextArea onChange={onChange} rows={4} />
     </Form.Item>
   </>
 );
@@ -29,10 +28,25 @@ const defaultTranslations = {
 let ElementsJSON: any[] = [];
 
 interface Propslines {
-  className?: string;
+  className?: 'added' | 'removed';
   line: string;
   pageElement: any;
 }
+
+interface propsLineElem {
+  backgroundColor: string;
+}
+
+const COLORS: BasicObject = {
+  added: 'springgreen',
+  odd: '#e8e6e6',
+  pair: '#f1eeee',
+  removed: 'lightcoral'
+}
+
+const DivLineStyled = styled.div`
+  background-color: ${(props: propsLineElem) => `${props.backgroundColor};`}
+`;
 
 const renderLine = (props: Propslines) => {
   const { className, line, pageElement } = props;
@@ -41,40 +55,46 @@ const renderLine = (props: Propslines) => {
   let keyParsed = key && key.trim();
   const valueParsed = value && value.trim().replaceAll(',', '');
 
+  const colorLine = className ? className : (ElementsJSON.length %2 === 0 ? 'pair' : 'odd');
+
+  const propsLine = { backgroundColor: COLORS[colorLine] };
+
   // exception case: line where key is a value because is only a value (example: value of a list)
   if (keyParsed && keyParsed.length > 2 && !valueParsed) {
     const [preKey, postKey] = line.split(keyParsed);
-    return (<div className={className}>
-        <pre>
-          {pageElement}
-          <span>{preKey}</span>
-          <span className="string">{keyParsed}</span>
-          <span>{postKey}</span>
-        </pre>
-    </div>);
+    return (
+      <DivLineStyled {...propsLine}>
+          <pre>
+            {pageElement}
+            <span>{preKey}</span>
+            <span className="string">{keyParsed}</span>
+            <span>{postKey}</span>
+          </pre>
+      </DivLineStyled>);
   }
 
   if (valueParsed) {
     const [preKey, postKey] = line.split(keyParsed);
     const [preValue, postValue] = postKey.split(valueParsed);
-    return (<div className={className}>
-        <pre>
-          {pageElement}
-          <span>{preKey}</span>
-          <span className="key">{keyParsed}</span>
-          <span>{preValue}</span>
-          <span className="string">{valueParsed}</span>
-          <span>{postValue}</span>
-        </pre>
-    </div>);
+    return (
+      <DivLineStyled {...propsLine}>
+          <pre>
+            {pageElement}
+            <span>{preKey}</span>
+            <span className="key">{keyParsed}</span>
+            <span>{preValue}</span>
+            <span className="string">{valueParsed}</span>
+            <span>{postValue}</span>
+          </pre>
+      </DivLineStyled>);
   }
   return (
-    <div className={className}>
+    <DivLineStyled {...propsLine}>
         <pre>
           {pageElement}
           {line}
         </pre>
-    </div>
+    </DivLineStyled>
   );
 }
 
@@ -85,36 +105,54 @@ const linesAreEquals = (line1: string, line2: string) => {
 }
 
 interface StringJsonCommenttedProps {
+  commentsEnabled: boolean;
   comments: any;
+  oldString: string;
+  newString?: string;
   translations: any;
 };
 
+// newString: '{\n\t"hammurabi": {\n\t\t"dataFrameInfo": {\n\t\t\t"cutoffDate": ${ODATE},\n\t\t\t"physicalTargetName": "t_kgov_ficticio_master",\n\t\t\t"source": "datio",\n\t\t\t"targetPathName": "targetPathName",\n\t\t\t"uuaa": "kgov"\n\t\t},\n\t\t"input": {\n\t\t\t"paths": [\n\t\t\t\t"targetPathName"\n\t\t\t],\n\t\t\t"type": "parquet"\n\t\t},\n\t\t"temporaryObjects": [\n\t\t\t{\n\t\t\t\t"class": "temporaryClass",\n\t\t\t\t"config": {\n\t\t\t\t\t"keyColumns": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"columnInput": "23",\n\t\t\t\t\t\t\t"columnOrigin": "3"\n\t\t\t\t\t\t}\n\t\t\t\t\t],\n\t\t\t\t\t"leftValues": {\n\t\t\t\t\t\t"paths": [\n\t\t\t\t\t\t\t${CACHE}"/artifactory/"${repo}"/schemaName"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t"schema": {\n\t\t\t\t\t\t\t"PATH": ${env1}"/"${env2}"/"${env3}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t"options": {\n\t\t\t\t\t\t\t"newOption1": "value1"\n\t\t\t\t\t\t},\n\t\t\t\t\t\t"type": "parquet"\n\t\t\t\t\t},\n\t\t\t\t\t"rightValues": {\n\t\t\t\t\t\t"paths": [\n\t\t\t\t\t\t\t"5"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t"type": "parquet"\n\t\t\t\t\t},\n\t\t\t\t\t"id": "1",\n\t\t\t\t\t"leftSubset": ${env7},\n\t\t\t\t\t"rightSubset": "2",\n\t\t\t\t\t"leftValuesCache": true,\n\t\t\t\t\t"leftValuesLastIntakeColumn": "new"\n\t\t\t\t}\n\t\t\t}\n\t\t],\n\t\t"rules": [\n\t\t\t{\n\t\t\t\t"class": "ruleClass",\n\t\t\t\t"config": {\n\t\t\t\t\t"failIfEmpty": false,\n\t\t\t\t\t"withRefusals": true,\n\t\t\t\t\t"tClass": "ruleClass",\n\t\t\t\t\t"column": "g_ficticio_campo5tmp://12",\n\t\t\t\t\t"format": ${env1}"/"${env2}"/"${env3},\n\t\t\t\t\t"id": "12323421496",\n\t\t\t\t\t"subset": "asd234"${env},\n\t\t\t\t\t"temporalPath": "1",\n\t\t\t\t\t"value": "fhdfh"${env}"asdasd"\n\t\t\t\t}\n\t\t\t}\n\t\t]\n\t}\n}'
 const defaultProps: StringJsonCommenttedProps = {
-  comments: {},
+  oldString: '{\n\t"hammurabi": {\n\t\t"dataFrameInfo": {\n\t\t\t"cutoffDate": ${ODATE},\n\t\t\t"physicalTargetName": "t_kgov_ficticio_master",\n\t\t\t"source": "datio",\n\t\t\t"targetPathName": "targetPathName",\n\t\t\t"uuaa": "kgov"\n\t\t},\n\t\t"input": {\n\t\t\t"paths": [\n\t\t\t\t"targetPathName"\n\t\t\t],\n\t\t\t"type": "parquet"\n\t\t},\n\t\t"temporaryObjects": [\n\t\t\t{\n\t\t\t\t"class": "temporaryClass",\n\t\t\t\t"config": {\n\t\t\t\t\t"id": "1",\n\t\t\t\t\t"keyColumns": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"columnInput": "2",\n\t\t\t\t\t\t\t"columnOrigin": "3"\n\t\t\t\t\t\t}\n\t\t\t\t\t],\n\t\t\t\t\t"leftSubset": ${env7},\n\t\t\t\t\t"leftValues": {\n\t\t\t\t\t\t"paths": [\n\t\t\t\t\t\t\t${CACHE}"/artifactory/"${repo}"/schemaName"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t"schema": {\n\t\t\t\t\t\t\t"PATH": ${env1}"/"${env2}"/"${env3}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t"type": "parquet"\n\t\t\t\t\t},\n\t\t\t\t\t"rightValues": {\n\t\t\t\t\t\t"paths": [\n\t\t\t\t\t\t\t"5"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t"type": "parquet"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t],\n\t\t"rules": [\n\t\t\t{\n\t\t\t\t"class": "ruleClass",\n\t\t\t\t"config": {\n\t\t\t\t\t"acceptanceMin": 0,\n\t\t\t\t\t"column": "g_ficticio_campo5tmp://1",\n\t\t\t\t\t"failIfEmpty": false,\n\t\t\t\t\t"format": ${env1}"/"${env2}"/"${env3},\n\t\t\t\t\t"id": "12323421496",\n\t\t\t\t\t"lastIntakeColumn": ${env}"asdasd",\n\t\t\t\t\t"subset": "asd234"${env},\n\t\t\t\t\t"tClass": "ruleClass",\n\t\t\t\t\t"temporalPath": "1",\n\t\t\t\t\t"value": "fhdfh"${env}"asdasd",\n\t\t\t\t\t"withRefusals": true\n\t\t\t\t}\n\t\t\t}\n\t\t]\n\t}\n}',
+  commentsEnabled: false,
+  comments: {
+    5: [{
+      author: "zaquiel",
+      content: <p>Default comment</p>,
+      datetime: <span>{moment().fromNow()}</span>
+    }]
+  },
   translations: defaultTranslations,
 }
 
-export const StringJsonCommentted = (props: StringJsonCommenttedProps) => {
-  const { translations } = props;
+let newComment = '';
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+export const StringJsonCommentted = (props: StringJsonCommenttedProps) => {
+  const { comments, commentsEnabled, oldString, newString, translations } = props;
+
+  const [lineModalVisible, setLineModalVisible] = useState(0);
+  const [okModalBtnEnabled, setOkModalBtnEnabled] = useState(false);
 
   ElementsJSON = [];
 
-  const stringJSONParsedEnv = '{\n  "hammurabi": {\n    "dataFrameInfo": {\n      "cutoffDate": "${ODATE}",\n      "physicalTargetName": "t_kgov_ficticio_master",\n      "source": "datio",\n      "targetPathName": "/data/master/kgov/t_kgov_ficticio_master",\n      "uuaa": "kgov"\n    },\n    "input": {\n      "paths": [\n        "/data/master/kgov/t_kgov_ficticio_master"\n      ],\n      "type": "parquet"\n    },\n    "temporaryObjects": [\n      {\n        "class": "com.datio.hammurabi.temporary.TemporaryObject",\n        "config": {\n          "id": "1",\n          "keyColumns": [\n            {\n              "columnInput": "2",\n              "columnOrigin": "3"\n            }\n          ],\n          "leftSubset": "${env7}",\n          "leftValues": {\n            "paths": [\n              "${CACHE}/artifactory/${repo}/schemaName"\n            ],\n            "schema": {\n              "PATH": "${env1}/${env2}/${env3}"\n            },\n            "type": "parquet"\n          },\n          "rightValues": {\n            "paths": [\n              "5"\n            ],\n            "type": "parquet"\n          }\n        }\n      }\n    ],\n    "rules": [\n      {\n        "class": "com.datio.hammurabi.rules.availability.DateValidationRule",\n        "config": {\n          "acceptanceMin": 0,\n          "column": "g_ficticio_campo5tmp://1",\n          "failIfEmpty": false,\n          "format": "${env1}/${env2}/${env3}",\n          "id": "1644340283496",\n          "lastIntakeColumn": "${env}asdasd",\n          "subset": "asd234${env}",\n          "tClass": "com.datio.hammurabi.rules.availability.DateValidationRule",\n          "temporalPath": "1",\n          "value": "fhdfh${env}asdasd",\n          "withRefusals": true\n        }\n      }\n    ]\n  }\n}'
-  const stringJSONParsedEnvNew = '{\n  "hammurabi": {\n    "dataFrameInfo": {\n      "cutoffDate": "${ODATE}",\n      "physicalTargetName": "t_kgov_ficticio_master",\n      "source": "datio",\n      "targetPathName": "/data/master/kgov/t_kgov_ficticio_master",\n      "uuaa": "kgov"\n    },\n    "input": {\n      "paths": [\n        "/data/master/kgov/t_kgov_ficticio_master"\n      ],\n      "type": "parquet"\n    },\n    "temporaryObjects": [\n      {\n        "class": "com.datio.hammurabi.temporary.TemporaryObject",\n        "config": {\n          "keyColumns": [\n            {\n              "columnInput": "23",\n              "columnOrigin": "3"\n            }\n          ],\n          "leftValues": {\n            "paths": [\n              "${CACHE}/artifactory/${repo}/schemaName"\n            ],\n            "schema": {\n              "PATH": "${env1}/${env2}/${env3}"\n            },\n            "options": {\n              "newOption1": "value1"\n            },\n            "type": "parquet"\n          },\n          "rightValues": {\n            "paths": [\n              "5"\n            ],\n            "type": "parquet"\n          },\n          "id": "1",\n          "leftSubset": "${env7}",\n          "rightSubset": "2",\n          "leftValuesCache": true,\n          "leftValuesLastIntakeColumn": "new"\n        }\n      }\n    ],\n    "rules": [\n      {\n        "class": "com.datio.hammurabi.rules.availability.DateValidationRule",\n        "config": {\n          "failIfEmpty": false,\n          "withRefusals": true,\n          "tClass": "com.datio.hammurabi.rules.availability.DateValidationRule",\n          "column": "g_ficticio_campo5tmp://12",\n          "format": "${env1}/${env2}/${env3}",\n          "id": "1644340283496",\n          "subset": "asd234${env}",\n          "temporalPath": "1",\n          "value": "fhdfh${env}asdasd"\n        }\n      }\n    ]\n  }\n}';
-
-  const lines = stringJSONParsedEnv.split('\n');
-  const linesNew = stringJSONParsedEnvNew.split('\n');
+  const lines = oldString ? oldString.split('\n') : [];
+  const linesNew = newString ? newString.split('\n') : [];
 
   let index = 0;
   let indexNew = 0;
 
   while (index < lines.length || indexNew < linesNew.length) {
+    const currentPage = ElementsJSON.length + 1;
     const pageElement = (
-      <Button className="page" onClick={() => setIsModalVisible(true)} >{ElementsJSON.length}</Button>
-    )
-    if (index === 45) debugger;
+      <span className="page">
+        <span className="pageNumber">
+            {currentPage}
+        </span>
+        {commentsEnabled && <Button className="pageBtn" onClick={() => setLineModalVisible(currentPage)} icon={<CommentOutlined />} />}
+      </span>
+    );
+
     // new string already finished
     if (indexNew === linesNew.length) {
       const line = lines[index];
@@ -164,24 +202,31 @@ export const StringJsonCommentted = (props: StringJsonCommenttedProps) => {
       <Modal
         cancelText={translations.modalCancel}
         closable={false}
-        okButtonProps={{ disabled: true }}
+        okButtonProps={{ disabled: !okModalBtnEnabled }}
         okText={translations.modalOk}
-        onCancel={() => { setIsModalVisible(!isModalVisible)}}
-        onOk={() => { setIsModalVisible(!isModalVisible)}}
+        onCancel={() => { setLineModalVisible(0)}}
+        onOk={() => { setLineModalVisible(0)}}
         title={translations.modalTitle}
-        visible={isModalVisible}
+        visible={!!lineModalVisible}
       >
-        <Comment
-          author={<a>31-03-2022</a>}
-          content={
-            <p>
-              We supply a series of design principles, practical patterns and high quality design
-              resources (Sketch and Axure).
-            </p>
-          }
-        >
-          <Editor onSubmit={() => {}} />
-        </Comment>
+        {lineModalVisible && comments[lineModalVisible] && comments[lineModalVisible].map((comment: any) => (
+          <>
+            <Comment
+              {...comment}
+            >
+            </Comment>
+            <Editor
+              defaultValue={newComment}
+              onChange={(elem: any) => {
+                newComment = elem.currentTarget.value;
+                const nextOkModalBtnEnabled = !!newComment.length;
+                if (nextOkModalBtnEnabled !== okModalBtnEnabled) {
+                  setOkModalBtnEnabled(nextOkModalBtnEnabled);
+                }
+              }}
+            />
+          </>
+        ))}
       </Modal>
       {ElementsJSON}
     </>
