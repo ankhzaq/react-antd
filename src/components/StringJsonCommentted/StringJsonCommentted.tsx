@@ -39,8 +39,10 @@ interface propsLineElem {
 
 const COLORS: BasicObject = {
   added: 'springgreen',
-  odd: '#e8e6e6',
-  pair: '#f1eeee',
+  odd: '#fff',
+  pair: '#fff',
+  //odd: '#e8e6e6',
+  //pair: '#f1eeee',
   removed: 'lightcoral'
 }
 

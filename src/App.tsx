@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Hammurabi from './screens/Hammurabi';
 import { Route, Routes } from 'react-router-dom';
 import ObjectsNoRules from './screens/ObjectsNoRules';
@@ -11,8 +11,34 @@ import { initializeStore } from './helpers/sessionStorage';
 import env from 'react-dotenv';
 import { createServerFunc } from './helpers/mockServer';
 import StringJsonCommentted from 'components/StringJsonCommentted';
+import HammurabiContainer from './screens/HammurabiContainer';
+
+const layoutDock: any = {
+  dockbox: {
+    mode: 'horizontal',
+    children: [
+      {
+        mode: 'horizontal',
+        children: [{
+          mode: 'horizontal',
+          children: [
+            {
+              tabs: [
+                {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />},
+                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRules />}
+              ],
+            },
+          ]
+        },
+          ],
+      }
+    ]
+  }
+};
 
 function App() {
+
+  const dockRef = useRef(null);
 
   useWillMount(() => {
     initializeStore();
@@ -25,66 +51,8 @@ function App() {
       <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
       <Route path="/" element={
         <DockLayout
-          defaultLayout={{
-            dockbox: {
-              mode: 'horizontal',
-              children: [
-                {
-                  mode: 'horizontal',
-                  size: 200,
-                  children: [
-                    {
-                      tabs: [
-                        {id: 'filters', title: 'Filters', content: <Filters
-                            filters={[
-                              {
-                                element: 'Input',
-                                key: 'input',
-                                placeholder: "Basic usage"
-                              },
-                              {
-                                element: "Select",
-                                key: 'select',
-                                options: [{
-                                  label: 'label1',
-                                  value: 'value1'
-                                },
-                                  {
-                                    label: 'label2',
-                                    value: 'value2'
-                                  }],
-                              },
-                              {
-                                element: "DatePicker",
-                                format: "DD-MM-YYYY",
-                                key: 'date',
-                                defaultValue: moment()
-                              }
-                              ,
-                              {
-                                element: "DatePicker",
-                                format: "YYYY-MM-DD HH:mm:ss",
-                                key: 'datetime',
-                                showTime: { format: 'HH:mm:ss' }
-                              }
-                            ]}
-                            getFilters={(filter) => {
-                              console.log("filter: ", filter);
-                            }}
-                          />}
-                      ],
-                    },
-                    {
-                      size: 1000,
-                      tabs: [
-                        {id: 'hammurabi', title: 'PivotGrid', content: <Hammurabi />}
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          }}
+          ref={dockRef}
+          defaultLayout={layoutDock}
           style={{
             position: "absolute",
             left: 10,
@@ -92,9 +60,7 @@ function App() {
             right: 10,
             bottom: 10,
           }}
-        >
-          <Hammurabi />
-        </DockLayout>} />
+        />} />
     </Routes>
   );
 }

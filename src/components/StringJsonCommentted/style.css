@@ -1,10 +1,11 @@
 pre {
-    outline: 1px solid #ccc;
+    /*outline: 1px solid #ccc;*/
+    overflow: hidden;
     padding: 0px;
-    margin: 1px;
+    margin: 0px;
 }
-.string { color: green; }
-.key { color: #0d1dc0; }
+.string { color: #DAA520; }
+.key { color: #59A5D8; }
 
 .page {
     margin-right: 10px;

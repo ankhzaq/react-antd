@@ -46,7 +46,7 @@ function Hammurabi(props: any) {
   console.log("hammurabi2");
   console.log(hammurabi);
 
-  const { getData } = props;
+  const { addTab, getData } = props;
 
   const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
 
@@ -195,6 +195,7 @@ function Hammurabi(props: any) {
                         }
                       });
                     });
+                    addTab("objectsNoRules");
                   }}
                 >
                   {childRows.reduce((prev: number, value: BasicObject) => prev + value[key], 0)}
