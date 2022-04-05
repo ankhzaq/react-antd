@@ -1,3 +1,4 @@
+import mockupDrilldownGridMetrics from '../mockups/drilldownGridMetrics.json';
 import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
 import mockupHammurabi from '../mockups/hammurabi.json';
 import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
@@ -33,5 +34,9 @@ export const endpoints: BasicObject = {
   objectNoRules: {
     url: `${pathDQ}/${pathMicroNotifications}/objects-without-rules`,
     mockup: mockupObjectsNoRules
+  },
+  drilldownGridMetrics: {
+    url: `${pathDQ}/${pathMicroNBX}/streaming-object`,
+    mockup: mockupDrilldownGridMetrics
   }
 }

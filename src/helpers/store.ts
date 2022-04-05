@@ -12,11 +12,18 @@ export const call = async (endpoint: string) => {
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
   hammurabi: ['filters', 'grid', 'graphicRules'],
+  drilldown: ['filters', 'gridMetrics'],
 }
 
 export const initState: BasicObject = {
   common: {
     rules: {
+      data: {}
+    }
+  },
+  drilldown: {
+    filters: {},
+    gridMetrics: {
       data: {}
     }
   },

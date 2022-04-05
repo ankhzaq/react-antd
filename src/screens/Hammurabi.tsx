@@ -43,12 +43,9 @@ function Hammurabi(props: any) {
 
   const { hammurabi } = useSelector((state: any) => state);
 
-  console.log("hammurabi2");
-  console.log(hammurabi);
-
   const { addTab, getData } = props;
 
-  const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
+  // const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
 
   const [modalInfo] = useState(initialModalInfo, "modalInfo");
 
@@ -93,13 +90,13 @@ function Hammurabi(props: any) {
 
   useEffect(() => {
     createServerFunc();
-    dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
+    // dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
     fetch(endpoints.hammurabi.url)
       .then((resp) => resp.json())
       .then((response) => {
         const rows = response.data;
         const firstElement = rows[0];
-        dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
+        // dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
         if (firstElement) {
           const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key)));
           const columnsResponse = columns.map((key: string) => ({

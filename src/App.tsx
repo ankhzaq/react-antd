@@ -12,6 +12,7 @@ import env from 'react-dotenv';
 import { createServerFunc } from './helpers/mockServer';
 import StringJsonCommentted from 'components/StringJsonCommentted';
 import HammurabiContainer from './screens/HammurabiContainer';
+import Drilldown from './screens/Drilldown';
 
 const layoutDock: any = {
   dockbox: {
@@ -25,7 +26,8 @@ const layoutDock: any = {
             {
               tabs: [
                 {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />},
-                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRules />}
+                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRules />},
+                {id: 'drilldown', title: 'drilldown', content: <Drilldown />}
               ],
             },
           ]

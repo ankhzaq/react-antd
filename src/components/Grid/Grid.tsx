@@ -41,6 +41,7 @@ export const Grid = (props = defaultProps) => {
     <div className="ag-theme-alpine" style={{ height }} >
       <AgGridReact
         { ...gridOptionsDefault }
+        {...restProps}
       >
       </AgGridReact>
     </div>
