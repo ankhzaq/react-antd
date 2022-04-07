@@ -69,7 +69,6 @@ function Hammurabi(props: any) {
   const filteredRows = useMemo(() => {
     const currentFilters: BasicObject = filters;
     return infoGrid.rows.filter((r) => {
-      // const { area, country, storageZone } = r;
       const validRecord = columns.every(({ key }) => {
         const valueFilter: any = currentFilters[key];
         const valueColumn = r[key];

@@ -13,13 +13,20 @@ export const call = async (endpoint: string) => {
 const ELEMENTS_BY_SCREEN: BasicObject = {
   hammurabi: ['filters', 'grid', 'graphicRules'],
   drilldown: ['filters', 'gridMetrics'],
+  objectsNoRules: ['filters'],
 }
 
 export const initState: BasicObject = {
   common: {
+    countries: {
+      data: ['ESP', 'GLO', 'PER', 'HOL', 'PTR', 'ITA']
+    },
     rules: {
       data: {}
-    }
+    },
+    storageZones: {
+      data: ['MASTER', 'SLAVE', 'STANING', 'PEPSI']
+    },
   },
   drilldown: {
     filters: {},
@@ -32,6 +39,7 @@ export const initState: BasicObject = {
     grid: {}
   },
   objectsNoRules: {
+    filters: {},
     grid: {}
   }
 }

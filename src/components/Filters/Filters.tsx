@@ -7,6 +7,7 @@ import { parseFilterObject, parseFilterString } from '../../helpers/filters';
 import moment from 'moment';
 
 const { Sider } = Layout;
+const { Option } = Select;
 
 interface FiltersProps {
   filters: any[];
@@ -36,19 +37,10 @@ const setFilters = (props: filtersElement) => {
   };
 }
 
-function getDefaultFilters() {
-  if (window.location.search.length && window.location.search.includes('?search=')) {
-    return parseFilterString(window.location.search.replace('?search=', ''));
-  }
-  return {};
-}
-
 export const Filters = (props = defaultProps) => {
   const { filters, mode, getFilters } = props;
 
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-
-  const defaultFilters = getDefaultFilters();
 
   const filtersContent = filters.map((infoFilter: any) => {
           const { element, key, onChange } = infoFilter;
@@ -83,13 +75,12 @@ export const Filters = (props = defaultProps) => {
             return (
               <Select
                 className="marginTop width100"
-                defaultValue={defaultFilters[key] || ''}
                 key={key}
                 { ...infoFilterParams }
               >
                 {infoFilter.options && (
                   infoFilter.options.map((info: any) => (
-                    <Select.Option key={`${key}-option-${info.key || info.value || info.label}`} {...info}>{info.label}</Select.Option>
+                    <Option key={`${key}-option-${info.key || info.value || info.label}`} {...info}>{info.label}</Option>
                   ))
                 )}
               </Select>
@@ -101,7 +92,6 @@ export const Filters = (props = defaultProps) => {
               <DatePicker
                 className="marginTop width100"
                 key={key}
-                defaultValue={defaultFilters[key] ? moment(defaultFilters[key]) : null}
                 { ...infoFilterParams }
               />
             );
@@ -111,8 +101,6 @@ export const Filters = (props = defaultProps) => {
             return (
               <TimePicker
                 className="marginTop width100"
-                defaultValue={defaultFilters[key] ? moment(defaultFilters[key]) : moment()}
-                value={defaultFilters[key] || ''}
                 key={key}
                 { ...infoFilterParams }
               />
@@ -122,7 +110,6 @@ export const Filters = (props = defaultProps) => {
           return (
             <Input
               className="marginTop"
-              defaultValue={defaultFilters[key] || ''}
               key={key}
               {...infoFilterParams}
             />

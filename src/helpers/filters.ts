@@ -23,7 +23,7 @@ export const parseFilterString = (filters: string) => {
   const result: BasicObject = {};
   filtersSplited.forEach((filter: string) => {
     const [key, value] = filter.split("==");
-    result[key] = value.replaceAll("'","");
+    result[key] = value && value.replaceAll("'","");
   });
 
   return result;

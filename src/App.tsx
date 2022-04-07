@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Hammurabi from './screens/Hammurabi';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import ObjectsNoRules from './screens/ObjectsNoRules';
 import DockLayout from 'rc-dock'
 import "rc-dock/dist/rc-dock.css";
-import Filters from 'components/Filters';
-import moment from 'moment';
 import { useWillMount } from './hooks';
 import { initializeStore } from './helpers/sessionStorage';
 import env from 'react-dotenv';
@@ -13,6 +9,7 @@ import { createServerFunc } from './helpers/mockServer';
 import StringJsonCommentted from 'components/StringJsonCommentted';
 import HammurabiContainer from './screens/HammurabiContainer';
 import Drilldown from './screens/Drilldown';
+import ObjectsNoRulesContainer from './screens/ObjectsNoRulesContainer';
 
 const layoutDock: any = {
   dockbox: {
@@ -25,8 +22,8 @@ const layoutDock: any = {
           children: [
             {
               tabs: [
+                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRulesContainer />},
                 {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />},
-                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRules />},
                 {id: 'drilldown', title: 'drilldown', content: <Drilldown />}
               ],
             },
@@ -40,8 +37,6 @@ const layoutDock: any = {
 
 function App() {
 
-  const dockRef = useRef(null);
-
   useWillMount(() => {
     initializeStore();
     if (env.MOCKS !== "false") createServerFunc();
@@ -50,10 +45,9 @@ function App() {
   return (
     <Routes>
       <Route path="/playground" element={<StringJsonCommentted /> } />
-      <Route path="/objectsNoRules" element={<ObjectsNoRules /> } />
+      <Route path="/objectsNoRules" element={<ObjectsNoRulesContainer /> } />
       <Route path="/" element={
         <DockLayout
-          ref={dockRef}
           defaultLayout={layoutDock}
           style={{
             position: "absolute",
