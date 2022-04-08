@@ -3,15 +3,21 @@ import { connect, useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import DockLayout from 'rc-dock';
 import Filters from 'components/Filters';
-import moment from 'moment';
+
 import ObjectsNoRules from './ObjectsNoRules';
 import FooterFilter from 'components/Filters/FooterFilter';
+
 import { setFiltersAction } from '../store/actions/objectsNoRules';
+
+const INITIAL_FILTER = {};
+
+let filters = INITIAL_FILTER;
 
 function ObjectsNoRulesContainer(props: { setFilters: (payload: any) => void }) {
   const { setFilters } = props;
 
   const { common = {} } = useSelector((state: any) => state);
+
 
   const layoutDock: any = {
     dockbox: {
@@ -57,13 +63,17 @@ function ObjectsNoRulesContainer(props: { setFilters: (payload: any) => void }) 
                         },
                         {
                           element: <FooterFilter
-                            onClearClick={() => {}}
-                            onFilterClick={() => {}}
+                            onClearClick={() => {
+                              setFilters({ data: INITIAL_FILTER, dateUpdated: new Date().getTime() });
+                            }}
+                            onFilterClick={() => {
+                              setFilters({ data: filters, dateUpdated: new Date().getTime() });
+                            }}
                           />,
                         },
                       ]}
-                      getFilters={(filters: any) => {
-                        setFilters(filters);
+                      getFilters={(filtersFromFilterComponent: any) => {
+                        filters = filtersFromFilterComponent;
                       }}
                     />}
                 ],

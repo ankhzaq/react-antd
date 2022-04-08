@@ -39,7 +39,10 @@ export const initState: BasicObject = {
     grid: {}
   },
   objectsNoRules: {
-    filters: {},
+    filters: {
+      dateUpdated: new Date().getTime(),
+      data: {}
+    },
     grid: {}
   }
 }
@@ -70,6 +73,7 @@ export function reducer(state = initState, action: ActionReducer) {
       }
     });
   });
-  const nextReduxState = setSessionStorage(null, nextState);
+  const stateToSave = JSON.parse(JSON.stringify(nextState));
+  const nextReduxState = setSessionStorage(null, stateToSave);
   return nextReduxState;
 }

@@ -67,7 +67,7 @@ export const Filters = (props = defaultProps) => {
               }
 
               // add filter in the url
-              window.history.pushState('', '', `?search=${parseFilterObject(filtersParsed)}`);
+              // window.history.pushState('', '', `?search=${parseFilterObject(filtersParsed)}`);
             }
           };
 

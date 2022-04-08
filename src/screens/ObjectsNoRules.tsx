@@ -5,14 +5,20 @@ import { createServerFunc } from 'helpers/mockServer';
 import { endpoints } from 'helpers/consts';
 import { ResponseObjectNoRules } from 'interfaces/ObjectNoRules';
 import Toolbar from 'components/Toolbar';
-import { useSelector } from 'react-redux';
-import { setSessionStorage } from '../helpers/sessionStorage';
+import { connect, useSelector } from 'react-redux';
 
 
 let totalElementsGrid: number = 0;
-function ObjectsNoRules() {
+function ObjectsNoRules(props: { dateUpdatedFilters: number }) {
+  const { dateUpdatedFilters } = props;
 
-  const { objectsNoRules = {} } = useSelector((state: any) => state);
+  const { objectsNoRules } = useSelector((state: any) => state);
+  const { grid, filters: {dateUpdated, data} } = objectsNoRules;
+
+  useEffect(() => {
+    console.log("dateUpdatedFilters: ", dateUpdatedFilters);
+  }, [data]);
+
 
   const [totalElements, setTotalElements] = useState(0);
 
@@ -76,4 +82,8 @@ function ObjectsNoRules() {
   );
 }
 
-export default ObjectsNoRules;
+const mapStateToProps = (state: any) => ({
+  dateUpdatedFilters: state.objectsNoRules.filters.dateUpdated
+})
+
+export default connect(mapStateToProps)(ObjectsNoRules);
