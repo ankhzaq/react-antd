@@ -3,6 +3,7 @@ import qs from 'query-string';
 import decodeUri from 'decode-uri-component';
 
 import { BasicObject } from '../interfaces/common';
+import { filtersElement } from 'components/Filters/Filters';
 
 export const parseFilterObject = (filters: BasicObject, mode: string = 'rsql') => {
   if (mode === 'query') return qs.stringify(filters);
@@ -27,4 +28,15 @@ export const parseFilterString = (filters: string) => {
   });
 
   return result;
+}
+
+export const setValuesCommonFilters = (filters: filtersElement[], data: BasicObject) => {
+  return filters.map((filter: filtersElement) => {
+    const { element, key } = filter;
+    if (typeof element !== 'string') return element;
+    return ({
+      ...filter,
+      value: data[key] || null
+    })
+  })
 }

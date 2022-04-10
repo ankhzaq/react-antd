@@ -11,7 +11,8 @@ export const spaces = {
 
 export const heights = {
   header: 87,
-  toolbar: 53
+  toolbar: 53,
+  dockbox: 107
 };
 
 export const constants = {

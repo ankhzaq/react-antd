@@ -19,7 +19,7 @@ const ELEMENTS_BY_SCREEN: BasicObject = {
 export const initState: BasicObject = {
   common: {
     countries: {
-      data: ['ESP', 'GLO', 'PER', 'HOL', 'PTR', 'ITA']
+      data: ['AL', 'ESP', 'GLO', 'PER', 'HOL', 'PTR', 'ITA']
     },
     rules: {
       data: {}

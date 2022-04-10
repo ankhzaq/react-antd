@@ -22,7 +22,7 @@ const defaultProps: FiltersProps = {
 
 const filtersParsed: BasicObject = {};
 
-interface filtersElement {
+export interface filtersElement {
   element: string;
   key: string;
   value: string | string[];

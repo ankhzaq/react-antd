@@ -3,11 +3,13 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 import { AgGridReact } from 'ag-grid-react';
+import { useEffect, useRef } from 'react';
 
 
 interface GridProps {
   gridOptions?: any,
   height: string,
+  getGridRef?: (refGrid: any) => void
 };
 
 const defaultProps: GridProps = {
@@ -16,7 +18,13 @@ const defaultProps: GridProps = {
 }
 
 export const Grid = (props = defaultProps) => {
-  const { height, gridOptions, ...restProps } = props;
+  const { height, gridOptions, getGridRef, ...restProps } = props;
+
+  const gridRef = useRef(null);
+
+  useEffect(() => {
+    if (getGridRef) getGridRef(gridRef);
+  }, []);
 
   const gridOptionsDefault = {
     defaultColDef: {
@@ -40,6 +48,7 @@ export const Grid = (props = defaultProps) => {
   return (
     <div className="ag-theme-alpine" style={{ height }} >
       <AgGridReact
+        ref={gridRef}
         { ...gridOptionsDefault }
         {...restProps}
       >
