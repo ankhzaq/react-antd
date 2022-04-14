@@ -16,28 +16,9 @@ export const heights = {
 };
 
 export const constants = {
+  COMMON: {
+    REQUESTED: 'requested',
+    SUCCEEDED: 'succeeded',
+  },
   ALL: 'ALL'
 };
-
-const pathDQ = '/api';
-const pathMicroNBX = 'nbx';
-const pathMicroNotifications = 'notifications';
-
-export const endpoints: BasicObject = {
-  hammurabi: {
-    url: `${pathDQ}/${pathMicroNBX}/pathMicroNBX`,
-    mockup: mockupHammurabi
-  },
-  hammurabiGraphicRules: {
-    url: `${pathDQ}/${pathMicroNBX}/hammurabi-rules`,
-    mockup: mockupHammurabigraphicRules
-  },
-  objectNoRules: {
-    url: `${pathDQ}/${pathMicroNotifications}/objects-without-rules`,
-    mockup: mockupObjectsNoRules
-  },
-  drilldownGridMetrics: {
-    url: `${pathDQ}/${pathMicroNBX}/streaming-object`,
-    mockup: mockupDrilldownGridMetrics
-  }
-}

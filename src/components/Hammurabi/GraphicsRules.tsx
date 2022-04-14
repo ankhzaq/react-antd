@@ -4,7 +4,7 @@ import hammurabiGraphic from 'mockups/hammurabiGraphic.json';
 import { connect } from 'react-redux';
 import { useReducer } from 'reinspect';
 import { reducer } from '../../helpers/store';
-import { endpoints } from '../../helpers/consts';
+import { endpoints } from '../../helpers/calls';
 
 interface GraphicsRulesProps {
   getData: () => void;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from './Grid';
 import { BrowserRouter } from 'react-router-dom';
-import { endpoints } from '../../helpers/consts';
+import { endpoints } from '../../helpers/calls'
 import { ResponseObjectNoRules } from '../../interfaces/ObjectNoRules';
 
 export default {

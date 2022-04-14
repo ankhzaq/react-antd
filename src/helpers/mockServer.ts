@@ -1,6 +1,6 @@
 import { createServer, Model } from "miragejs"
-import { endpoints } from './consts';
 import { parseFilterString } from './filters';
+import { endpoints } from './calls';
 
 export const createServerFunc = () => {
 

@@ -1,6 +1,6 @@
-import { endpoints } from './consts';
 import { ActionReducer, BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from './sessionStorage';
+import { endpoints } from './calls';
 
 export const NAME_SESSION_APP = "reactAntd";
 

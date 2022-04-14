@@ -1,5 +1,5 @@
+import { endpoints } from 'helpers/calls';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { endpoints } from '../../helpers/consts';
 
 function* getData({}) {
   console.log("confirmation that sagas has been integrated with React hooks");

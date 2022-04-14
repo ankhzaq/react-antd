@@ -89,7 +89,8 @@
   },
   "react-dotenv": {
     "whitelist": [
-      "ENV"
+      "ENV",
+      "MOCKs"
     ]
   },
   "devDependencies": {

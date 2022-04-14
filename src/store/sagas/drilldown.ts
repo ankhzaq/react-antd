@@ -1,5 +1,5 @@
+import { endpoints } from 'helpers/calls';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { endpoints } from '../../helpers/consts';
 
 function* getDataMetrics({}) {
   // @ts-ignore

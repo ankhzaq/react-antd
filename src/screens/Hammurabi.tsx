@@ -4,7 +4,7 @@ import { useReducer, useState } from 'reinspect';
 import Header from "components/Header";
 import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
-import { endpoints, heights } from '../helpers/consts';
+import { heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
 import { Button, Checkbox, InputNumber, Layout, Modal, Select } from 'antd';
 import 'antd/dist/antd.css';
@@ -16,6 +16,7 @@ import { reducer } from '../helpers/store';
 import ModalComponent, { ModalInfoInterface } from 'components/Modal/ModalComponent';
 import Graphics from 'components/Hammurabi/Graphics';
 import GraphicsRules from 'components/Hammurabi/GraphicsRules';
+import { endpoints } from '../helpers/calls';
 const { Content, Sider } = Layout;
 
 const { Option } = Select;

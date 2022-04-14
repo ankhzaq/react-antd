@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Header from "components/Header";
 import Grid from 'components/Grid';
 import { createServerFunc } from 'helpers/mockServer';
-import { endpoints, heights } from 'helpers/consts';
+import { heights } from 'helpers/consts';
 import { ResponseObjectNoRules } from 'interfaces/ObjectNoRules';
 import Toolbar from 'components/Toolbar';
 import { connect, useSelector } from 'react-redux';
 import { parseFilterObject } from '../helpers/filters';
 import { BasicObject } from 'interfaces/common';
+import { endpoints } from '../helpers/calls';
 
 let totalElementsGrid: number = 0;
 let paramsGrid: any = null;
@@ -29,11 +30,9 @@ function ObjectsNoRules() {
     if (refGrid.current) {
       const columnsDef = refGrid.current.columnApi.columnModel.getColumnDefs();
       const activeDisableFilters = columnsDef[0].filter !== (pagination.totalElements <= 1000);
-      debugger;
       if (activeDisableFilters) {
         const filterSortActived = pagination.totalElements <= 1000;
         const nextColumnsDef = columnsDef.map((columnDef: BasicObject) => ({ ...columnDef, filter: filterSortActived, sortable: filterSortActived   }))
-        debugger;
         refGrid.current.columnApi.columnModel.setColumnDefs(nextColumnsDef)
       }
     }

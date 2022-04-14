@@ -1,66 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Header from "components/Header";
 import Grid from 'components/Grid';
-import { createServerFunc } from 'helpers/mockServer';
-import { endpoints } from 'helpers/consts';
-import { ResponseObjectNoRules } from 'interfaces/ObjectNoRules';
 import Toolbar from 'components/Toolbar';
-import { connect, useSelector } from 'react-redux';
-import { setSessionStorage } from '../helpers/sessionStorage';
-import { useReducer } from 'reinspect';
-import { reducer } from '../helpers/store';
+import { useSelector } from 'react-redux';
+import { endpoints, getDataWithoutRedux } from '../helpers/calls';
 
-interface PropsDrilldown {
-  getData: () => void,
+const PAGE_SIZE = 10000;
+
+// refParamsGrid
+let paramsGrid: any = null;
+
+// Variable to save data when rc-dock is changing the layout
+const localInfoGrid = {
+  totalElements: null,
+  data: [],
 }
 
+const COLUMNS = Object.keys(endpoints.drilldown_gridMetrics.mockup.data[0]);
 
-let totalElementsGrid: number = 0;
-function Drilldown(props: PropsDrilldown) {
-  const { getData } = props;
+function Drilldown() {
+  const [totalElements, setTotalElements] = useState(0);
+  let refGrid = useRef(null);
 
   const { drilldown = { gridMetrics: { data: {} } } } = useSelector((state: any) => state);
   const { gridMetrics: { data } } = drilldown;
 
-  useEffect(() => {
-    // createServerFunc();
-    getData();
-  }, []);
+  const getLocalDataNoRedux = async () => {
+    debugger;
+    if (!localInfoGrid.totalElements) {
+      const baseUrl = endpoints.drilldown_gridMetrics.url;
+      const filters = {};
+      const { data, pagination } = await getDataWithoutRedux({ baseUrl, filters, refGrid, pageSize: PAGE_SIZE, paramsGrid });
+      const dataGrid = data && (data.data || data);
+      debugger;
+      localInfoGrid.data = dataGrid;
+      localInfoGrid.totalElements = pagination.totalElements;
+      setTotalElements(pagination.totalElements);
+    } else {
+      setTotalElements(localInfoGrid.totalElements);
+      paramsGrid.successCallback(localInfoGrid.data);
+    }
+  };
 
-  // @ts-ignore
-
-  const columns = (data && data.data) ? Object.keys(data.data[0]) : [];
   return (
     <>
       <Header title="Drilldown" />
       <Toolbar>
-        Search results |
+        {`Search results | ${totalElements}`}
       </Toolbar>
       <Grid
+        getGridRef={(gridRef) => {
+          refGrid = gridRef;
+        }}
         gridOptions={{
-          columnDefs: columns.map((columnKey) => ({
+          columnDefs: COLUMNS.map((columnKey) => ({
             headerName: columnKey,
             field: columnKey,
             filter: true,
             flex: 1,
             sortable: true,
           })),
-          onGridReady: (params: any) => {
-            fetch(endpoints.drilldownGridMetrics.url)
-              .then((resp) => resp.json())
-              .then((response) => {
-                const dataSource = {
-                  rowCount: null,
-                  getRows: function (params: any) {
-                    setTimeout( function() {
-                      if (!totalElementsGrid || params.startRow < totalElementsGrid) {
-                        params.successCallback(response.data);
-                      }
-                    }, 500);
-                  }
-                };
-                params.api.setDatasource(dataSource);
-              });
+          onGridReady: async (params: any) => {
+            try {
+
+              const dataSource = {
+                rowCount: null,
+                getRows: function (params: any) {
+                  paramsGrid = params;
+                  getLocalDataNoRedux();
+                }
+              };
+              params.api.setDatasource(dataSource);
+            } catch (e) {
+            }
           }
         }}
         height={`${window.innerHeight * 0.9}px`}
@@ -69,11 +81,4 @@ function Drilldown(props: PropsDrilldown) {
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  getData: () => dispatch({
-    type: 'drilldown_gridMetrics_requested',
-    payload: {}
-  })
-});
-
-export default connect(null, mapDispatchToProps)(Drilldown);
+export default Drilldown;
