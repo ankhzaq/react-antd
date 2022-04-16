@@ -4,6 +4,7 @@ import mockupHammurabi from '../mockups/hammurabi.json';
 import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
 import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
 import mockupDrilldownGridMetrics from '../mockups/drilldownGridMetrics.json';
+import mockupDrilldownGraphicStorageZones from '../mockups/graphicStorageZones.json';
 
 interface GenericReduxProps {
   baseUrl: string;
@@ -74,5 +75,10 @@ export const endpoints: BasicObject = {
   drilldown_gridMetrics: {
     url: `${pathDQ}/${pathMicroNBX}/streaming-object`,
     mockup: mockupDrilldownGridMetrics
+  },
+  drilldown_graphicStorageZones: {
+    genericSagas: true,
+    mockup: mockupDrilldownGraphicStorageZones,
+    url: `${pathDQ}/${pathMicroNBX}/drilldown-graphic-storage-zones`,
   }
 }

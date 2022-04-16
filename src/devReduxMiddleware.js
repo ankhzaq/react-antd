@@ -18,7 +18,6 @@ const getState = () => {
  * @returns {Boolean} True if persisted/removed correctly; false otherwise.
  */
 const saveState = (state = {}) => {
-  debugger;
   /*const toPersistData = JSON.stringify(state);
 
   if (toPersistData) {

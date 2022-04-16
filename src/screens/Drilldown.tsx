@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from "components/Header";
 import Grid from 'components/Grid';
 import Toolbar from 'components/Toolbar';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { endpoints, getDataWithoutRedux } from '../helpers/calls';
+import GraphicStorageZones from 'components/drilldown/GraphicStorageZones';
 
 const PAGE_SIZE = 10000;
 
@@ -18,21 +19,28 @@ const localInfoGrid = {
 
 const COLUMNS = Object.keys(endpoints.drilldown_gridMetrics.mockup.data[0]);
 
-function Drilldown() {
+interface propsDrilldown {
+  getData: () => void
+}
+
+function Drilldown(props: propsDrilldown) {
+  const { getData } = props;
   const [totalElements, setTotalElements] = useState(0);
   let refGrid = useRef(null);
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   const { drilldown = { gridMetrics: { data: {} } } } = useSelector((state: any) => state);
-  const { gridMetrics: { data } } = drilldown;
+  const { gridMetrics: { data }, graphicStorageZones } = drilldown;
 
   const getLocalDataNoRedux = async () => {
-    debugger;
     if (!localInfoGrid.totalElements) {
       const baseUrl = endpoints.drilldown_gridMetrics.url;
       const filters = {};
       const { data, pagination } = await getDataWithoutRedux({ baseUrl, filters, refGrid, pageSize: PAGE_SIZE, paramsGrid });
       const dataGrid = data && (data.data || data);
-      debugger;
       localInfoGrid.data = dataGrid;
       localInfoGrid.totalElements = pagination.totalElements;
       setTotalElements(pagination.totalElements);
@@ -48,37 +56,51 @@ function Drilldown() {
       <Toolbar>
         {`Search results | ${totalElements}`}
       </Toolbar>
-      <Grid
-        getGridRef={(gridRef) => {
-          refGrid = gridRef;
-        }}
-        gridOptions={{
-          columnDefs: COLUMNS.map((columnKey) => ({
-            headerName: columnKey,
-            field: columnKey,
-            filter: true,
-            flex: 1,
-            sortable: true,
-          })),
-          onGridReady: async (params: any) => {
-            try {
+      <div className="flex-column">
+        <div className="flex1">
+          <GraphicStorageZones />
+        </div>
+        <div className="flex1">
+          <Grid
+            getGridRef={(gridRef) => {
+              refGrid = gridRef;
+            }}
+            gridOptions={{
+              columnDefs: COLUMNS.map((columnKey) => ({
+                headerName: columnKey,
+                field: columnKey,
+                filter: true,
+                flex: 1,
+                sortable: true,
+              })),
+              onGridReady: async (params: any) => {
+                try {
 
-              const dataSource = {
-                rowCount: null,
-                getRows: function (params: any) {
-                  paramsGrid = params;
-                  getLocalDataNoRedux();
+                  const dataSource = {
+                    rowCount: null,
+                    getRows: function (params: any) {
+                      paramsGrid = params;
+                      getLocalDataNoRedux();
+                    }
+                  };
+                  params.api.setDatasource(dataSource);
+                } catch (e) {
                 }
-              };
-              params.api.setDatasource(dataSource);
-            } catch (e) {
-            }
-          }
-        }}
-        height={`${window.innerHeight * 0.9}px`}
-      />
-    </>
+              }
+            }}
+            height={`${window.innerHeight * 0.45}px`}
+          />
+        </div>
+      </div>
+      </>
   );
 }
 
-export default Drilldown;
+const mapDispatchToProps = (dispatch: any) => ({
+  getData: () => dispatch({
+    type: 'drilldown_graphicStorageZones_requested',
+    payload: {}
+  })
+});
+
+export default connect(null, mapDispatchToProps)(Drilldown);

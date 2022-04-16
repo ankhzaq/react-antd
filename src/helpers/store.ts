@@ -12,7 +12,7 @@ export const call = async (endpoint: string) => {
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
   hammurabi: ['filters', 'grid', 'graphicRules'],
-  drilldown: ['filters', 'gridMetrics'],
+  drilldown: ['filters', 'gridMetrics', 'graphicStorageZones'],
   objectsNoRules: ['filters'],
 }
 
@@ -32,7 +32,10 @@ export const initState: BasicObject = {
     filters: {},
     gridMetrics: {
       data: {}
-    }
+    },
+    graphicStorageZones: {
+      data: {}
+    },
   },
   hammurabi: {
     filters: {},
@@ -59,7 +62,6 @@ export function reducer(state = initState, action: ActionReducer) {
     const elements = ELEMENTS_BY_SCREEN[screenKey];
     elements.forEach((element: string) => {
       const screenState = nextState[screenKey];
-      if (!screenState) debugger;
       const currentStateElement = screenState[element];
 
       if (type === `${screenKey}_${element}`) {

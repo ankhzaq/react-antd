@@ -1,0 +1,6 @@
+{
+  "data": [{"numJobs":989,"storageZoneType":"MASTER"},
+    {"numJobs":671,"storageZoneType":"STANING"},
+    {"numJobs":480,"storageZoneType":"PEPSI"},
+    {"numJobs":257,"storageZoneType":"SLAVE"}]
+}
