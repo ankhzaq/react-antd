@@ -5,6 +5,7 @@ import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
 import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
 import mockupDrilldownGridMetrics from '../mockups/drilldownGridMetrics.json';
 import mockupDrilldownGraphicStorageZones from '../mockups/graphicStorageZones.json';
+import mockupDrilldownGridStatusByObject from '../mockups/drilldownGridStatusByObject.json';
 
 interface GenericReduxProps {
   baseUrl: string;
@@ -50,6 +51,7 @@ export const getDataWithoutRedux = async (props: GenericReduxProps) => {
   // Contemplate the two posibles responses
   const dataGrid = data && (data.data || data)
   // notify to aggrid that the call has finished successfully
+  debugger;
   paramsGrid.successCallback(dataGrid);
 
   return response;
@@ -80,5 +82,9 @@ export const endpoints: BasicObject = {
     genericSagas: true,
     mockup: mockupDrilldownGraphicStorageZones,
     url: `${pathDQ}/${pathMicroNBX}/drilldown-graphic-storage-zones`,
+  },
+  drilldown_gridStatusByObject: {
+    mockup: mockupDrilldownGridStatusByObject,
+    url: `${pathDQ}/${pathMicroNBX}/drilldown-status-by-object`,
   }
 }

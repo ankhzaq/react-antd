@@ -5,14 +5,14 @@ import { endpoints } from './calls';
 export const NAME_SESSION_APP = "reactAntd";
 
 export const call = async (endpoint: string) => {
-  return fetch(endpoints["endpoint"])
+  return fetch(endpoints[endpoint])
     .then((resp) => resp)
     .catch((err) => err);
 }
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
   hammurabi: ['filters', 'grid', 'graphicRules'],
-  drilldown: ['filters', 'gridMetrics', 'graphicStorageZones'],
+  drilldown: ['filters', 'graphicStorageZones', 'gridMetrics', 'gridStatusByObject'],
   objectsNoRules: ['filters'],
 }
 
@@ -30,12 +30,15 @@ export const initState: BasicObject = {
   },
   drilldown: {
     filters: {},
-    gridMetrics: {
-      data: {}
-    },
     graphicStorageZones: {
       data: {}
     },
+    gridStatusByObject: {
+      data: {}
+    },
+    gridMetrics: {
+      data: {}
+    }
   },
   hammurabi: {
     filters: {},

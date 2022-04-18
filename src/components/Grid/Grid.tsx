@@ -7,9 +7,10 @@ import { useEffect, useRef } from 'react';
 
 
 interface GridProps {
-  gridOptions?: any,
-  height: string,
-  getGridRef?: (refGrid: any) => void
+  gridOptions?: any;
+  height: string;
+  getGridRef?: (refGrid: any) => void;
+  width?: string;
 };
 
 const defaultProps: GridProps = {
@@ -18,7 +19,7 @@ const defaultProps: GridProps = {
 }
 
 export const Grid = (props = defaultProps) => {
-  const { height, gridOptions, getGridRef, ...restProps } = props;
+  const { height, width, gridOptions, getGridRef, ...restProps } = props;
 
   const gridRef = useRef(null);
 
@@ -46,7 +47,7 @@ export const Grid = (props = defaultProps) => {
     ...gridOptions
   };
   return (
-    <div className="ag-theme-alpine" style={{ height }} >
+    <div className="ag-theme-alpine" style={{ height, width }} >
       <AgGridReact
         ref={gridRef}
         { ...gridOptionsDefault }
