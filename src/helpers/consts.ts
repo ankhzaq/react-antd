@@ -16,9 +16,15 @@ export const heights = {
 };
 
 export const constants = {
+  ALL: 'ALL',
   COMMON: {
     REQUESTED: 'requested',
     SUCCEEDED: 'succeeded',
   },
-  ALL: 'ALL'
+  HAMMURABI: {
+    TODAY: 'today',
+    YESTERDAY: 'yesterday',
+    LASTDAYOFMONTH: 'lastdayOfMonth',
+    LASTDAYOFQUARTER: 'lastDayOfQuarter'
+  }
 };

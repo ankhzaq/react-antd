@@ -10,6 +10,7 @@ import StringJsonCommentted from 'components/StringJsonCommentted';
 import HammurabiContainer from './screens/HammurabiContainer';
 import Drilldown from './screens/Drilldown';
 import ObjectsNoRulesContainer from './screens/ObjectsNoRulesContainer';
+import DrilldownContainer from './screens/DrilldownContainer';
 
 const layoutDock: any = {
   dockbox: {
@@ -22,9 +23,9 @@ const layoutDock: any = {
           children: [
             {
               tabs: [
-                {id: 'drilldown', title: 'drilldown', content: <Drilldown />},
-                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRulesContainer />},
-                {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />}
+                {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />},
+                {id: 'drilldown', title: 'drilldown', content: <DrilldownContainer />},
+                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRulesContainer />}
               ],
             },
           ]

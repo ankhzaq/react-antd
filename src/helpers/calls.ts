@@ -1,11 +1,18 @@
 import { parseFilterObject } from './filters';
 import { BasicObject } from '../interfaces/common';
 import mockupHammurabi from '../mockups/hammurabi.json';
+
+import mockupHammurabi_today from '../mockups/hammurabi_today.json';
+import mockupHammurabi_yesterday from '../mockups/hammurabi_yesterday.json';
+import mockupHammurabi_lastDayOfMonth from '../mockups/hammurabi_lastDayOfMonth.json';
+import mockupHammurabi_lastDayOfQuarter from '../mockups/hammurabi_lastDayOfQuarter.json';
+
 import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
 import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
 import mockupDrilldownGridMetrics from '../mockups/drilldownGridMetrics.json';
 import mockupDrilldownGraphicStorageZones from '../mockups/graphicStorageZones.json';
 import mockupDrilldownGridStatusByObject from '../mockups/drilldownGridStatusByObject.json';
+import { constants } from './consts';
 
 interface GenericReduxProps {
   baseUrl: string;
@@ -14,6 +21,13 @@ interface GenericReduxProps {
   pageSize: number;
   paramsGrid: any;
 }
+
+export const commonHeader = {
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PATCH',
+  'Access-Control-Allow-Origin': '*',
+  'Content-Type': 'application/json',
+  accept: 'application/json'
+};
 
 export const getDataWithoutRedux = async (props: GenericReduxProps) => {
   const { baseUrl, filters, refGrid, pageSize, paramsGrid } = props;
@@ -51,7 +65,6 @@ export const getDataWithoutRedux = async (props: GenericReduxProps) => {
   // Contemplate the two posibles responses
   const dataGrid = data && (data.data || data)
   // notify to aggrid that the call has finished successfully
-  debugger;
   paramsGrid.successCallback(dataGrid);
 
   return response;
@@ -65,6 +78,22 @@ export const endpoints: BasicObject = {
   hammurabi: {
     url: `${pathDQ}/${pathMicroNBX}/pathMicroNBX`,
     mockup: mockupHammurabi
+  },
+  hammurabi_today: {
+    url: `${pathDQ}/${pathMicroNBX}/today`,
+    mockup: mockupHammurabi_today.data
+  },
+  hammurabi_yesterday: {
+    url: `${pathDQ}/${pathMicroNBX}/yesterday`,
+    mockup: mockupHammurabi_yesterday.data
+  },
+  hammurabi_lastDayOfMonth: {
+    url: `${pathDQ}/${pathMicroNBX}/lastMonth`,
+    mockup: mockupHammurabi_lastDayOfMonth.data
+  },
+  hammurabi_lastDayOfQuarter: {
+    url: `${pathDQ}/${pathMicroNBX}/lastDayOfQuarter`,
+    mockup: mockupHammurabi_lastDayOfQuarter.data
   },
   hammurabiGraphicRules: {
     url: `${pathDQ}/${pathMicroNBX}/hammurabi-rules`,

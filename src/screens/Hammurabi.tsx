@@ -11,17 +11,15 @@ import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
 import Toolbar from 'components/Toolbar';
-import Filters from 'components/Filters';
-import { reducer } from '../helpers/store';
 import ModalComponent, { ModalInfoInterface } from 'components/Modal/ModalComponent';
 import Graphics from 'components/Hammurabi/Graphics';
 import GraphicsRules from 'components/Hammurabi/GraphicsRules';
-import { endpoints } from '../helpers/calls';
-const { Content, Sider } = Layout;
+import hammurabi from '../store/sagas/hammurabi';
+const { Content } = Layout;
 
 const { Option } = Select;
 
-const GROUP_BY_COLUMNS = ['country', 'area', 'storageZone'];
+const GROUP_BY_COLUMNS = ['countryId', 'area', 'storageZoneType'];
 
 const defaultInfoGrid: PivotGridProps = {
   rows: [],
@@ -35,14 +33,22 @@ interface Filter {
   storageZone: string[];
 }
 
-const SCREEN = 'hammurabi';
-const ELEMENTS = ['grid'];
-
 const initialModalInfo: ModalInfoInterface = {};
+
+interface interfaceRulesInfo {
+  list: string[];
+  mvp: string[];
+};
+
+const rulesInfo: interfaceRulesInfo = {
+  list: [],
+  mvp: []
+};
 
 function Hammurabi(props: any) {
 
   const { hammurabi } = useSelector((state: any) => state);
+  const { grid: { data }} = hammurabi;
 
   const { addTab, getData } = props;
 
@@ -53,6 +59,7 @@ function Hammurabi(props: any) {
   const [infoGrid, setInfoGrid] = useState(defaultInfoGrid, "infoGrid");
   const [filters, setFilters] = useState<Filter>(hammurabi.filters, "filterGrid");
   const [showGraphics, setShowGraphics] = useState(false, 'hammurabiGraphic');
+  const localFilters: BasicObject = { ...filters };
 
   // SHOW MODAL
   useEffect(() => {
@@ -89,122 +96,143 @@ function Hammurabi(props: any) {
   }, [infoGrid.rows, filters]);
 
   useEffect(() => {
-    createServerFunc();
-    // dispatch({ type: 'hammurabi_grid_requested', payload: {}, screen: SCREEN, elements: ELEMENTS});
-    fetch(endpoints.hammurabi.url)
-      .then((resp) => resp.json())
-      .then((response) => {
-        const rows = response.data;
-        const firstElement = rows[0];
-        // dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
-        if (firstElement) {
-          const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key)));
-          const columnsResponse = columns.map((key: string) => ({
-            headerCellClass: 'filter-cell',
-            headerRenderer: (info: any) => {
-              const { column: { name } } = info;
-              const currentFilters: BasicObject = getSessionStorage("hammurabi");
-              if (!infoGrid.groupBy.includes(name))
-                return (
-                  <>
-                    <div className="flex1">{name}</div>
-                    <div className="flex">
-                      <InputNumber
-                        className="flex1"
-                        defaultValue={currentFilters[key] && currentFilters[key].min}
-                        onChange={(value) => {
-                          if (!currentFilters[key]) {
-                            currentFilters[key] = {
-                              min: 0,
-                              max: 0
-                            };
-                          }
-                          currentFilters[key].min = value;
-                          setNewFilters(currentFilters);
-                        }}
-                        placeholder="min"
-                      />
-                      <InputNumber
-                        className="flex1"
-                        defaultValue={currentFilters[key] && currentFilters[key].max}
-                        onChange={(value) => {
-                          if (!currentFilters[key]) {
-                            currentFilters[key] = {
-                              min: 0,
-                              max: 0
-                            };
-                          }
-                          currentFilters[key].max = value;
-                          setNewFilters(currentFilters);
-                        }}
-                        placeholder="max"
-                      />
-                    </div>
-                  </>
-                );
-              const options: string[] = [];
-              rows.forEach((rowInfo: any) => {
-                const value = rowInfo[key];
-                const alreadyExist = value && options.includes(value);
-                if (value && !alreadyExist) options.push(value);
-              });
+    if (data && data.data) {
+      const rows = data.data;
+      const firstElement = rows[0];
+      // dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
+      if (firstElement) {
+        const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key) || key === 'rulesDesc'));
+        debugger;
+        const columnsResponse = columns.map((key: string) => ({
+          headerCellClass: 'filter-cell',
+          headerRenderer: (info: any) => {
+            const { column: { name } } = info;
+            const currentFilters: BasicObject = getSessionStorage("hammurabi");
 
-              const filtersSession = getSessionStorage("hammurabi").filters;
-
+            if (name === 'rulesDesc') {
               return (
-                <>
+                <div>
                   <div>{key}</div>
                   <Select
-                    defaultValue={filtersSession && filtersSession[key]}
+                    defaultValue={localFilters[key]}
                     mode="multiple"
                     onChange={(value) => {
-                      const newFilters = { ...filtersSession };
-                      newFilters[key] = value;
+                      const newFilters = { ...filters };
+                      localFilters[key] = value;
                       setNewFilters(newFilters);
                     }}
                     placeholder={`${key} filter...`}
                     style={{ width: '100%' }}
                   >
-                    {options.map((option) => (
+                    {rulesInfo.list.map((option) => (
                       <Option key={`${key}-${option}`} value={option}>{option}</Option>
                     ))}
                   </Select>
+                </div>
+              );
+            }
+
+            if (!infoGrid.groupBy.includes(name))
+              return (
+                <>
+                  <div className="flex1">{name}</div>
+                  <div className="flex">
+                    <InputNumber
+                      className="flex1"
+                      defaultValue={currentFilters[key] && currentFilters[key].min}
+                      onChange={(value) => {
+                        if (!currentFilters[key]) {
+                          currentFilters[key] = {
+                            min: 0,
+                            max: 0
+                          };
+                        }
+                        currentFilters[key].min = value;
+                        setNewFilters(currentFilters);
+                      }}
+                      placeholder="min"
+                    />
+                    <InputNumber
+                      className="flex1"
+                      defaultValue={currentFilters[key] && currentFilters[key].max}
+                      onChange={(value) => {
+                        if (!currentFilters[key]) {
+                          currentFilters[key] = {
+                            min: 0,
+                            max: 0
+                          };
+                        }
+                        currentFilters[key].max = value;
+                        setNewFilters(currentFilters);
+                      }}
+                      placeholder="max"
+                    />
+                  </div>
                 </>
               );
-            },
-            key,
-            groupFormatter: function (props: any) {
-              const { childRows, groupKey } = props;
-              if (!key.includes('Count')) return <>{groupKey}</>;
-              return (
-                <Button
-                  onClick={() => {
-                    const firstElement = childRows[0];
-                    const filters: BasicObject = {};
-                    infoGrid.groupBy.forEach((keyGroupBy) => {
-                      filters[keyGroupBy] = firstElement[keyGroupBy];
-                    });
+            const options: string[] = [];
+            rows.forEach((rowInfo: any) => {
+              const value = rowInfo[key];
+              const alreadyExist = value && options.includes(value);
+              if (value && !alreadyExist) options.push(value);
+            });
 
-                    childRows.forEach((rowInfo: any) => {
-                      infoGrid.groupBy.forEach((keyGroupBy) => {
-                        if (filters[keyGroupBy] && filters[keyGroupBy] !== rowInfo[keyGroupBy]) {
-                          delete filters[keyGroupBy];
-                        }
-                      });
-                    });
-                    addTab("objectsNoRules");
+            const filtersSession = getSessionStorage("hammurabi").filters;
+
+            return (
+              <>
+                <div>{key}</div>
+                <Select
+                  defaultValue={filtersSession && filtersSession[key]}
+                  mode="multiple"
+                  onChange={(value) => {
+                    const newFilters = { ...filtersSession };
+                    newFilters[key] = value;
+                    setNewFilters(newFilters);
                   }}
+                  placeholder={`${key} filter...`}
+                  style={{ width: '100%' }}
                 >
-                  {childRows.reduce((prev: number, value: BasicObject) => prev + value[key], 0)}
-                </Button>);
-            },
-            name: key,
-          }));
+                  {options.map((option) => (
+                    <Option key={`${key}-${option}`} value={option}>{option}</Option>
+                  ))}
+                </Select>
+              </>
+            );
+          },
+          key,
+          groupFormatter: function (props: any) {
+            const { childRows, groupKey } = props;
+            if (!key.includes('Count')) return <>{groupKey}</>;
+            return (
+              <Button
+                onClick={() => {
+                  const firstElement = childRows[0];
+                  const filters: BasicObject = {};
+                  infoGrid.groupBy.forEach((keyGroupBy) => {
+                    filters[keyGroupBy] = firstElement[keyGroupBy];
+                  });
 
-          setInfoGrid({ ...infoGrid, columns: columnsResponse, rows: response.data });
-        }
-      });
-  }, []);
+                  childRows.forEach((rowInfo: any) => {
+                    infoGrid.groupBy.forEach((keyGroupBy) => {
+                      if (filters[keyGroupBy] && filters[keyGroupBy] !== rowInfo[keyGroupBy]) {
+                        delete filters[keyGroupBy];
+                      }
+                    });
+                  });
+                  addTab("objectsNoRules");
+                }}
+              >
+                {childRows.reduce((prev: number, value: BasicObject) => prev + value[key], 0)}
+              </Button>);
+          },
+          name: key,
+        }));
+
+        setInfoGrid({ ...infoGrid, columns: columnsResponse, rows: data.data });
+      }
+    }
+  }, [data]);
 
   return (
     <Layout className="site-layout-background width100 height100">

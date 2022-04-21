@@ -3,7 +3,6 @@ import 'antd/dist/antd.css';
 import DockLayout from 'rc-dock';
 import Filters from 'components/Filters';
 import moment from 'moment';
-import Hammurabi from './Hammurabi';
 import Drilldown from './Drilldown';
 
 const layoutDock: any = {
@@ -64,14 +63,14 @@ const layoutDock: any = {
       {
         size: 1000,
         tabs: [
-          {id: 'drilldown', title: 'drilldown', content: <Drilldown />}
+          {id: 'drilldownScreen', title: 'Data', content: <Drilldown />}
         ]
       }
     ]
   }
 };
 
-function HammurabiContainer(props: any) {
+function DrilldownContainer(props: any) {
 
   return (
     <DockLayout
@@ -87,4 +86,4 @@ function HammurabiContainer(props: any) {
   );
 }
 
-export default HammurabiContainer;
+export default DrilldownContainer;
