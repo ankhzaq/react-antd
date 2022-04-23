@@ -4,6 +4,11 @@ import mockupHammurabi from '../mockups/hammurabi.json';
 import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
 import { BasicObject } from '../interfaces/common';
 
+export const COLORS = {
+  GREEN: '#07c375',
+  YELLOW: '#fba202'
+};
+
 export const spaces = {
   header: 20,
   standard: 15

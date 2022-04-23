@@ -1,4 +1,5 @@
 import { ActionReducer, BasicObject } from '../interfaces/common';
+import mockupRules from '../mockups/rules.json';
 import { getSessionStorage, setSessionStorage } from './sessionStorage';
 import { endpoints } from './calls';
 
@@ -22,7 +23,7 @@ export const initState: BasicObject = {
       data: ['AL', 'ESP', 'GLO', 'PER', 'HOL', 'PTR', 'ITA']
     },
     rules: {
-      data: {}
+      data: mockupRules.data
     },
     storageZones: {
       data: ['MASTER', 'SLAVE', 'STANING', 'PEPSI']

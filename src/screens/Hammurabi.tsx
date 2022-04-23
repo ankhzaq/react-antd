@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { connect, useSelector } from 'react-redux'
-import { useReducer, useState } from 'reinspect';
+import { useState } from 'reinspect';
 import Header from "components/Header";
-import { createServerFunc } from 'helpers/mockServer';
 import PivotGrid from 'components/PivotGrid';
-import { heights } from '../helpers/consts';
+import { COLORS, constants, heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
-import { Button, Checkbox, InputNumber, Layout, Modal, Select } from 'antd';
+import { Button, Checkbox, InputNumber, Layout, Modal, Select, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
@@ -15,9 +14,12 @@ import ModalComponent, { ModalInfoInterface } from 'components/Modal/ModalCompon
 import Graphics from 'components/Hammurabi/Graphics';
 import GraphicsRules from 'components/Hammurabi/GraphicsRules';
 import hammurabi from '../store/sagas/hammurabi';
+import Capsule from 'components/Capsule';
 const { Content } = Layout;
 
 const { Option } = Select;
+
+const SCREEN_KEY = 'hammurabi';
 
 const GROUP_BY_COLUMNS = ['countryId', 'area', 'storageZoneType'];
 
@@ -47,7 +49,7 @@ const rulesInfo: interfaceRulesInfo = {
 
 function Hammurabi(props: any) {
 
-  const { hammurabi } = useSelector((state: any) => state);
+  const { common, hammurabi } = useSelector((state: any) => state);
   const { grid: { data }} = hammurabi;
 
   const { addTab, getData } = props;
@@ -60,6 +62,15 @@ function Hammurabi(props: any) {
   const [filters, setFilters] = useState<Filter>(hammurabi.filters, "filterGrid");
   const [showGraphics, setShowGraphics] = useState(false, 'hammurabiGraphic');
   const localFilters: BasicObject = { ...filters };
+
+  if (!rulesInfo.list.length && common.rules.data.length) {
+    common.rules.data.forEach((ruleKey: any) => {
+      const { ruleMvpType, ruleType, principleType } = ruleKey;
+      const ruleFullKey = `${principleType}.${ruleType}`;
+      if (ruleMvpType) rulesInfo.mvp.push(ruleFullKey);
+      rulesInfo.list.push(ruleFullKey);
+    });
+  }
 
   // SHOW MODAL
   useEffect(() => {
@@ -102,7 +113,6 @@ function Hammurabi(props: any) {
       // dispatch({ type: 'hammurabi_grid_succeeded', payload: { data: { data: rows, pagination: response.pagination } }, screen: SCREEN, elements: ELEMENTS});
       if (firstElement) {
         const columns = Object.keys(firstElement).filter((key) => key !== 'objectsInMultipleJobsCount' && (key.includes('Count') || infoGrid.groupBy.includes(key) || key === 'rulesDesc'));
-        debugger;
         const columnsResponse = columns.map((key: string) => ({
           headerCellClass: 'filter-cell',
           headerRenderer: (info: any) => {
@@ -203,6 +213,40 @@ function Hammurabi(props: any) {
           key,
           groupFormatter: function (props: any) {
             const { childRows, groupKey } = props;
+
+            if (key === 'rulesDesc') {
+              const allRules: any[] = [];
+
+              // get all rules of every row
+              childRows.forEach((row: any) => {
+                row.rulesDesc.forEach((rule: string) => {
+                  if (!allRules.includes(rule)) allRules.push(rule);
+                });
+              });
+
+              let tooltipRules = '';
+
+              // tooltip to show all rules list
+              allRules.forEach((ruleKey) => {
+                if (tooltipRules.length) tooltipRules += ', ';
+                tooltipRules += ruleKey;
+              });
+
+              return (
+                <Tooltip title={tooltipRules}>
+                  <div className="flex-row height100">
+                    {allRules.map((ruleKey) => {
+                      const isMVPRule = rulesInfo.mvp.includes(ruleKey);
+                      const bgColor = isMVPRule ? COLORS.GREEN : COLORS.YELLOW;
+                      return (
+                        <Capsule bgColor={bgColor} color="white" label={ruleKey} key={ruleKey} />
+                      );
+                    })}
+                  </div>
+                </Tooltip>
+              );
+            }
+
             if (!key.includes('Count')) return <>{groupKey}</>;
             return (
               <Button
@@ -305,7 +349,7 @@ function Hammurabi(props: any) {
 }
 const mapDispatchToProps = (dispatch: any) => ({
   getData: () => dispatch({
-    type: 'hammurabi_grid_requested',
+    type: `${SCREEN_KEY}_grid_${constants.COMMON.REQUESTED}`,
     payload: {}
   })
 });

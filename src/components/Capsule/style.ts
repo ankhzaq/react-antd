@@ -11,5 +11,6 @@ export const CapsuleStyled = styled.span<Props>`
   border-radius: 5px;
   font-weight: 500;
   margin: 2px;
-  padding: 5px 10px;
+  padding: 0px 3px;
+  font-size: 11px;
 `;

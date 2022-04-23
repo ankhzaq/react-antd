@@ -1,0 +1,102 @@
+{
+  "data": [
+    {
+      "principleType": 1,
+      "ruleType": 1,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 1,
+      "ruleType": 2,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 2,
+      "ruleType": 1
+    },
+    {
+      "principleType": 2,
+      "ruleType": 2,
+      "ruleMvpType": true
+    },
+    {
+      "principleType": 2,
+      "ruleType": 3
+    },
+    {
+      "principleType": 2,
+      "ruleType": 4,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 3,
+      "ruleType": 1,
+      "ruleMvpType": true
+    },
+    {
+
+      "principleType": 3,
+      "ruleType": 3,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 3,
+      "ruleType": 4,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 3,
+      "ruleType": 5,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 4,
+      "ruleType": 1,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 4,
+      "ruleType": 2,
+      "ruleMvpType": true
+    },
+    {
+      "principleType": 4,
+      "ruleType": 3,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 5,
+      "ruleType": 1,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 5,
+      "ruleType": 2,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 5,
+      "ruleType": 3,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 5,
+      "ruleType": 4,
+      "ruleMvpType": false
+    },
+    {
+      "principleType": 5,
+      "ruleType": 5,
+      "ruleMvpType": false
+    }
+  ],
+  "pagination": {
+    "page": 0,
+    "totalPages": 1,
+    "totalElements": 18,
+    "pageSize": 50,
+    "links": {
+      "first": "/nbx-rule/api/v0/rules?languageId=en"
+    }
+  }
+}
