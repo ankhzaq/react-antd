@@ -11,6 +11,9 @@ import HammurabiContainer from './screens/HammurabiContainer';
 import Drilldown from './screens/Drilldown';
 import ObjectsNoRulesContainer from './screens/ObjectsNoRulesContainer';
 import DrilldownContainer from './screens/DrilldownContainer';
+import { constants } from './helpers/consts';
+
+const { drilldown, hammurabi, objectsNoRules } = constants.SCREEN_IDS;
 
 const layoutDock: any = {
   dockbox: {
@@ -23,9 +26,9 @@ const layoutDock: any = {
           children: [
             {
               tabs: [
-                {id: 'hammurabi', title: 'hammurabi', content: <HammurabiContainer />},
-                {id: 'drilldown', title: 'drilldown', content: <DrilldownContainer />},
-                {id: 'objectsNoRules', title: 'objectsNoRules', content: <ObjectsNoRulesContainer />}
+                {id: hammurabi, title: hammurabi, content: <HammurabiContainer />},
+                {id: drilldown, title: drilldown, content: <DrilldownContainer />},
+                {id: objectsNoRules, title: objectsNoRules, content: <ObjectsNoRulesContainer />}
               ],
             },
           ]

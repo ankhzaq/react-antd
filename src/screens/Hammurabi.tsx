@@ -3,9 +3,9 @@ import { connect, useSelector } from 'react-redux'
 import { useState } from 'reinspect';
 import Header from "components/Header";
 import PivotGrid from 'components/PivotGrid';
-import { COLORS, constants, heights } from '../helpers/consts';
+import { COLORS, heights } from '../helpers/consts';
 import { PivotGridProps } from 'components/PivotGrid/PivotGrid';
-import { Button, Checkbox, InputNumber, Layout, Modal, Select, Tooltip } from 'antd';
+import { Button, Checkbox, InputNumber, Layout, Select, Skeleton, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { BasicObject } from '../interfaces/common';
 import { getSessionStorage, setSessionStorage } from '../helpers/sessionStorage';
@@ -15,11 +15,10 @@ import Graphics from 'components/Hammurabi/Graphics';
 import GraphicsRules from 'components/Hammurabi/GraphicsRules';
 import hammurabi from '../store/sagas/hammurabi';
 import Capsule from 'components/Capsule';
+import { getHammurabiDataAction } from '../store/actions/hammurabi';
 const { Content } = Layout;
 
 const { Option } = Select;
-
-const SCREEN_KEY = 'hammurabi';
 
 const GROUP_BY_COLUMNS = ['countryId', 'area', 'storageZoneType'];
 
@@ -50,11 +49,14 @@ const rulesInfo: interfaceRulesInfo = {
 function Hammurabi(props: any) {
 
   const { common, hammurabi } = useSelector((state: any) => state);
-  const { grid: { data }} = hammurabi;
+  const { grid: { data, loading }, filtersPanel: { data: dataFilterPanel, date: dateFilterPanel } } = hammurabi;
+
+  useEffect(() => {
+    console.log("Loading hammurabi: ", loading);
+  }, [loading]);
+
 
   const { addTab, getData } = props;
-
-  // const [state, dispatch] = useReducer(reducer, {}, state => state, "hammurabiReducer");
 
   const [modalInfo] = useState(initialModalInfo, "modalInfo");
 
@@ -74,8 +76,8 @@ function Hammurabi(props: any) {
 
   // SHOW MODAL
   useEffect(() => {
-    getData();
-  }, []);
+    getData(dataFilterPanel);
+  }, [dateFilterPanel]);
 
   const { rows, columns, groupBy } = infoGrid;
 
@@ -295,8 +297,10 @@ function Hammurabi(props: any) {
                   Show Table
                 </Button>
               </Toolbar>
-              <Graphics />
-              <GraphicsRules />
+              <Skeleton loading={loading}>
+                <Graphics />
+                <GraphicsRules />
+              </Skeleton>
             </>
           ) : (
             <>
@@ -329,15 +333,17 @@ function Hammurabi(props: any) {
               </Toolbar>
               {rows && (
                 <div className="flex1">
-                  <PivotGrid
-                    columns={columns}
-                    groupBy={groupBy}
-                    height={window.innerHeight - heights.header - heights.toolbar}
-                    rows={filteredRows}
-                    restProps={{
-                      headerRowHeight: 75
-                    }}
-                  />
+                  <Skeleton loading={loading}>
+                    <PivotGrid
+                      columns={columns}
+                      groupBy={groupBy}
+                      height={window.innerHeight - heights.header - heights.toolbar}
+                      rows={filteredRows}
+                      restProps={{
+                        headerRowHeight: 75
+                      }}
+                    />
+                  </Skeleton>
                 </div>
               )}
             </>
@@ -348,10 +354,7 @@ function Hammurabi(props: any) {
   );
 }
 const mapDispatchToProps = (dispatch: any) => ({
-  getData: () => dispatch({
-    type: `${SCREEN_KEY}_grid_${constants.COMMON.REQUESTED}`,
-    payload: {}
-  })
+  getData: (payload: any) => dispatch(getHammurabiDataAction(payload))
 });
 
 export default connect(null, mapDispatchToProps)(Hammurabi);

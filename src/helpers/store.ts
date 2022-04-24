@@ -12,7 +12,7 @@ export const call = async (endpoint: string) => {
 }
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
-  hammurabi: ['filters', 'grid', 'graphicRules'],
+  hammurabi: ['filters', 'filtersPanel', 'grid', 'graphicRules'],
   drilldown: ['filters', 'graphicStorageZones', 'gridMetrics', 'gridStatusByObject'],
   objectsNoRules: ['filters'],
 }
@@ -30,6 +30,10 @@ export const initState: BasicObject = {
     },
   },
   drilldown: {
+    filtersPanel: {
+      data: {},
+      dateUpdated: new Date().getTime()
+    },
     filters: {},
     graphicStorageZones: {
       data: {}
@@ -42,6 +46,10 @@ export const initState: BasicObject = {
     }
   },
   hammurabi: {
+    filtersPanel: {
+      data: {},
+      dateUpdated: new Date().getTime()
+    },
     filters: {},
     grid: {}
   },
@@ -69,7 +77,8 @@ export function reducer(state = initState, action: ActionReducer) {
       const currentStateElement = screenState[element];
 
       if (type === `${screenKey}_${element}`) {
-        screenState[element] = payload;
+        screenState[element].data = payload;
+        screenState[element].date = new Date().getTime();
       } else if (type === `${screenKey}_${element}_failed`) {
         screenState[element] = { ...currentStateElement, loading: false, ...payload };
       } else if (type === `${screenKey}_${element}_requested`) {

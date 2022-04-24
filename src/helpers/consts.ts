@@ -31,5 +31,10 @@ export const constants = {
     YESTERDAY: 'yesterday',
     LASTDAYOFMONTH: 'lastdayOfMonth',
     LASTDAYOFQUARTER: 'lastDayOfQuarter'
+  },
+  SCREEN_IDS: {
+    drilldown: 'drilldown',
+    hammurabi: 'hammurabi',
+    objectsNoRules: 'objectsNoRules',
   }
 };
