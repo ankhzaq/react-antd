@@ -12,6 +12,7 @@ export const call = async (endpoint: string) => {
 }
 
 const ELEMENTS_BY_SCREEN: BasicObject = {
+  refusals: ['filters', 'filtersPanel', 'grid'],
   hammurabi: ['filters', 'filtersPanel', 'grid', 'graphicRules'],
   drilldown: ['filters', 'graphicStorageZones', 'gridMetrics', 'gridStatusByObject'],
   objectsNoRules: ['filters'],
@@ -46,6 +47,14 @@ export const initState: BasicObject = {
     }
   },
   hammurabi: {
+    filtersPanel: {
+      data: {},
+      dateUpdated: new Date().getTime()
+    },
+    filters: {},
+    grid: {}
+  },
+  refusals: {
     filtersPanel: {
       data: {},
       dateUpdated: new Date().getTime()

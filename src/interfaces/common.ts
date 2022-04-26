@@ -8,6 +8,20 @@ export interface rootReducerInterface {
       data: any[]
     },
   },
+  refusals: {
+    filtersPanel: {
+      data: FiltersPanelHammurabi,
+      date: number
+    },
+    grid: {
+      loading: boolean;
+      error: boolean;
+      data?: {
+        data: any[],
+        pagination: any
+      }
+    }
+  },
   hammurabi: {
     filtersPanel: {
       data: FiltersPanelHammurabi,

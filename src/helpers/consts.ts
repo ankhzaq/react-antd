@@ -1,9 +1,3 @@
-import mockupDrilldownGridMetrics from '../mockups/drilldownGridMetrics.json';
-import mockupObjectsNoRules from '../mockups/objectsNoRules.json';
-import mockupHammurabi from '../mockups/hammurabi.json';
-import mockupHammurabigraphicRules from '../mockups/hammurabiGraphicRules.json';
-import { BasicObject } from '../interfaces/common';
-
 export const COLORS = {
   GREEN: '#07c375',
   YELLOW: '#fba202'
@@ -36,5 +30,6 @@ export const constants = {
     drilldown: 'drilldown',
     hammurabi: 'hammurabi',
     objectsNoRules: 'objectsNoRules',
+    refusals: 'refusals',
   }
 };

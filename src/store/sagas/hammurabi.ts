@@ -3,6 +3,8 @@ import { commonHeader, endpoints } from 'helpers/calls';
 import { constants } from 'helpers/consts';
 import { BasicObject } from 'interfaces/common';
 
+const SCREEN_ID = constants.SCREEN_IDS.hammurabi;
+
 // Get data for each date (method used )
 function* getHammurabiJobsDataDate(date: string) {
   try {
@@ -10,7 +12,7 @@ function* getHammurabiJobsDataDate(date: string) {
 
     // @ts-ignore
     response = yield fetch(
-      `${endpoints[`hammurabi_${date}`].url}`,
+      `${endpoints[`${SCREEN_ID}_${date}`].url}`,
       {
         method: 'GET',
         headers: commonHeader,
@@ -62,7 +64,7 @@ function* getHammurabiJobsDataAllDates() {
 }
 
 const hammurabiSagas = [
-  takeLatest("hammurabi_grid_requested", getHammurabiJobsDataAllDates),
+  takeLatest(`${SCREEN_ID}_grid_${constants.COMMON.REQUESTED}`, getHammurabiJobsDataAllDates),
 ];
 
 export default hammurabiSagas;

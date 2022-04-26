@@ -1,7 +1,7 @@
 import { parseFilterObject } from './filters';
 import { BasicObject } from '../interfaces/common';
-import mockupHammurabi from '../mockups/hammurabi.json';
 
+import mockupRefusals from '../mockups/refusals.json';
 import mockupHammurabi_today from '../mockups/hammurabi_today.json';
 import mockupHammurabi_yesterday from '../mockups/hammurabi_yesterday.json';
 import mockupHammurabi_lastDayOfMonth from '../mockups/hammurabi_lastDayOfMonth.json';
@@ -75,10 +75,6 @@ const pathMicroNBX = 'nbx';
 const pathMicroNotifications = 'notifications';
 
 export const endpoints: BasicObject = {
-  hammurabi: {
-    url: `${pathDQ}/${pathMicroNBX}/pathMicroNBX`,
-    mockup: mockupHammurabi
-  },
   hammurabi_today: {
     url: `${pathDQ}/${pathMicroNBX}/today`,
     mockup: mockupHammurabi_today.data
@@ -115,5 +111,9 @@ export const endpoints: BasicObject = {
   drilldown_gridStatusByObject: {
     mockup: mockupDrilldownGridStatusByObject,
     url: `${pathDQ}/${pathMicroNBX}/drilldown-status-by-object`,
-  }
+  },
+  refusals_grid: {
+    url: `${pathDQ}/${pathMicroNBX}/refusals-grid`,
+    mockup: mockupRefusals.data
+  },
 }
