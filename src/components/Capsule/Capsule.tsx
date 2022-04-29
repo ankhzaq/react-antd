@@ -5,7 +5,8 @@ import { CapsuleStyled } from './style';
 interface CapsuleProps {
   bgColor?: string;
   color?: string;
-  label: string
+  label: string;
+  padding?: string;
 };
 
 const defaultProps: CapsuleProps = {
@@ -15,8 +16,8 @@ const defaultProps: CapsuleProps = {
 }
 
 export const Capsule = (props = defaultProps) => {
-  const { bgColor, color, label } = props;
+  const { bgColor, color, label, padding } = props;
   return (
-    <CapsuleStyled bgColor={bgColor} color={color}>{label}</CapsuleStyled>
+    <CapsuleStyled bgColor={bgColor} color={color} padding={padding}>{label}</CapsuleStyled>
   );
 }

@@ -16,6 +16,7 @@ import GraphicsRules from 'components/Hammurabi/GraphicsRules';
 import hammurabi from '../store/sagas/hammurabi';
 import Capsule from 'components/Capsule';
 import { getHammurabiDataAction } from '../store/actions/hammurabi';
+import RulesGuide from 'components/common/RulesGuide';
 const { Content } = Layout;
 
 const { Option } = Select;
@@ -330,6 +331,7 @@ function Hammurabi(props: any) {
                 >
                   Show Hammurabi Graphics
                 </Button>
+                <RulesGuide />
               </Toolbar>
               {rows && (
                 <div className="flex1">

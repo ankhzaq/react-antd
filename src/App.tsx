@@ -27,8 +27,8 @@ const layoutDock: any = {
           children: [
             {
               tabs: [
-                {id: refusals, title: refusals, content: <RefusalsContainer />},
                 {id: hammurabi, title: hammurabi, content: <HammurabiContainer />},
+                {id: refusals, title: refusals, content: <RefusalsContainer />},
                 {id: drilldown, title: drilldown, content: <DrilldownContainer />},
                 {id: objectsNoRules, title: objectsNoRules, content: <ObjectsNoRulesContainer />}
               ],

@@ -4,7 +4,6 @@ import hammurabiSagas from './hammurabi';
 import refusalsSagas from './refusals';
 import genericSagas from './generic';
 
-
 export default function* rootSaga() {
   yield all([
     ...drilldownSagas,

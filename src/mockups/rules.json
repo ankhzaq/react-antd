@@ -1,99 +1,28 @@
 {
-  "data": [
-    {
-      "principleType": 1,
-      "ruleType": 1,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 1,
-      "ruleType": 2,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 2,
-      "ruleType": 1
-    },
-    {
-      "principleType": 2,
-      "ruleType": 2,
-      "ruleMvpType": true
-    },
-    {
-      "principleType": 2,
-      "ruleType": 3
-    },
-    {
-      "principleType": 2,
-      "ruleType": 4,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 3,
-      "ruleType": 1,
-      "ruleMvpType": true
-    },
-    {
-
-      "principleType": 3,
-      "ruleType": 3,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 3,
-      "ruleType": 4,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 3,
-      "ruleType": 5,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 4,
-      "ruleType": 1,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 4,
-      "ruleType": 2,
-      "ruleMvpType": true
-    },
-    {
-      "principleType": 4,
-      "ruleType": 3,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 5,
-      "ruleType": 1,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 5,
-      "ruleType": 2,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 5,
-      "ruleType": 3,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 5,
-      "ruleType": 4,
-      "ruleMvpType": false
-    },
-    {
-      "principleType": 5,
-      "ruleType": 5,
-      "ruleMvpType": false
-    }
-  ],
+  "data": [{"principleType":5,"principleDesc":"SLK-Class","ruleType":1,"ruleTypeShortDesc":"Island Oasis - Lemonade","ruleMvpType":false},
+    {"principleType":2,"principleDesc":"Grand Cherokee","ruleType":4,"ruleTypeShortDesc":"Cod - Salted, Boneless","ruleMvpType":false},
+    {"principleType":6,"principleDesc":"F150","ruleType":3,"ruleTypeShortDesc":"Lettuce - Sea / Sea Asparagus","ruleMvpType":true},
+    {"principleType":4,"principleDesc":"Mountaineer","ruleType":4,"ruleTypeShortDesc":"Soup Knorr Chili With Beans","ruleMvpType":false},
+    {"principleType":2,"principleDesc":"Z4 M","ruleType":5,"ruleTypeShortDesc":"Soup - Campbells, Lentil","ruleMvpType":false},
+    {"principleType":6,"principleDesc":"370Z","ruleType":3,"ruleTypeShortDesc":"Lamb - Rack","ruleMvpType":true},
+    {"principleType":4,"principleDesc":"Xterra","ruleType":6,"ruleTypeShortDesc":"Oxtail - Cut","ruleMvpType":true},
+    {"principleType":5,"principleDesc":"E250","ruleType":1,"ruleTypeShortDesc":"Yams","ruleMvpType":true},
+    {"principleType":5,"principleDesc":"V8 Vantage","ruleType":3,"ruleTypeShortDesc":"Wine - Rosso Toscano Igt","ruleMvpType":true},
+    {"principleType":1,"principleDesc":"Monte Carlo","ruleType":1,"ruleTypeShortDesc":"Beef - Tenderloin Tails","ruleMvpType":true},
+    {"principleType":3,"principleDesc":"GS","ruleType":3,"ruleTypeShortDesc":"Jam - Raspberry,jar","ruleMvpType":true},
+    {"principleType":4,"principleDesc":"Taurus","ruleType":3,"ruleTypeShortDesc":"Pastry - Banana Muffin - Mini","ruleMvpType":true},
+    {"principleType":5,"principleDesc":"MX-5","ruleType":4,"ruleTypeShortDesc":"Grenadine","ruleMvpType":true},
+    {"principleType":6,"principleDesc":"RX-7","ruleType":6,"ruleTypeShortDesc":"Green Tea Refresher","ruleMvpType":true},
+    {"principleType":1,"principleDesc":"Miata MX-5","ruleType":6,"ruleTypeShortDesc":"Tea - Honey Green Tea","ruleMvpType":false},
+    {"principleType":5,"principleDesc":"GS","ruleType":2,"ruleTypeShortDesc":"Soap - Pine Sol Floor Cleaner","ruleMvpType":false},
+    {"principleType":2,"principleDesc":"Festiva","ruleType":1,"ruleTypeShortDesc":"Kippers - Smoked","ruleMvpType":true},
+    {"principleType":1,"principleDesc":"Miata MX-5","ruleType":5,"ruleTypeShortDesc":"Shrimp - Baby, Warm Water","ruleMvpType":true},
+    {"principleType":5,"principleDesc":"Tempo","ruleType":2,"ruleTypeShortDesc":"Pizza Pizza Dough","ruleMvpType":false},
+    {"principleType":1,"principleDesc":"M","ruleType":1,"ruleTypeShortDesc":"Ham - Cooked Italian","ruleMvpType":true}],
   "pagination": {
     "page": 0,
     "totalPages": 1,
-    "totalElements": 18,
+    "totalElements": 20,
     "pageSize": 50,
     "links": {
       "first": "/nbx-rule/api/v0/rules?languageId=en"

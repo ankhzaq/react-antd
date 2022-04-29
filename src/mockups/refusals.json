@@ -453,7 +453,7 @@
       {"area":"China","count":11,"countryId":"CN","deploymentType":"Global","refusalReason":"reason4","storageZoneType":"STANING","uuaaId":"Accent"},
       {"area":"China","count":46,"countryId":"CN","deploymentType":"Global","refusalReason":"reason1","storageZoneType":"RAW","uuaaId":"Endeavor"},
       {"area":"Philippines","count":52,"countryId":"PH","deploymentType":"Global","refusalReason":"reason2","storageZoneType":"STANING","uuaaId":"Vantage"}],
-    "lastdayOfMonth": [{"area":"Indonesia","count":31,"countryId":"ID","deploymentType":"Local","refusalReason":"reason3","storageZoneType":"STANING","uuaaId":"Sierra 3500"},
+    "lastDayOfMonth": [{"area":"Indonesia","count":31,"countryId":"ID","deploymentType":"Local","refusalReason":"reason3","storageZoneType":"STANING","uuaaId":"Sierra 3500"},
       {"area":"China","count":56,"countryId":"CN","deploymentType":"Global","refusalReason":"reason2","storageZoneType":"RAW","uuaaId":"Yukon XL 2500"},
       {"area":"Philippines","count":87,"countryId":"PH","deploymentType":"Local","refusalReason":"reason7","storageZoneType":"RAW","uuaaId":"Sienna"},
       {"area":"Russia","count":81,"countryId":"RU","deploymentType":"multicountry","refusalReason":"reason1","storageZoneType":"MASTER","uuaaId":"Suburban 2500"},

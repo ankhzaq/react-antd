@@ -29,7 +29,7 @@ export interface FiltersElement {
 const setFilters = (props: FiltersElement) => {
   const { key, value } = props;
   if (value === null || value === undefined || !value.length) {
-    delete filtersParsed[key];
+    delete filtersParsed[key]
   } else {
     filtersParsed[key] = value;
   };
