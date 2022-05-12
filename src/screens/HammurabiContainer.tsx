@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import 'antd/dist/antd.css';
 import DockLayout from 'rc-dock';
 import Filters from 'components/Filters';
@@ -17,6 +17,8 @@ interface HammurabiContainerProps {
 let localFilterPanel: FiltersPanelHammurabi;
 
 const filtersRef: BasicObject = {};
+
+let formRef: any = null;
 
 function HammurabiContainer(props: HammurabiContainerProps) {
   const { saveFilters } = props;
@@ -102,6 +104,7 @@ function HammurabiContainer(props: HammurabiContainerProps) {
                             <FooterFilter
                               key="footerFilter"
                               onClearClick={() => {
+                                formRef.resetFields();
                                 const keysRefFilters = Object.keys(filtersRef);
                                 keysRefFilters.forEach((keyRefFilter: string) => {
                                   const refFilter = filtersRef[keyRefFilter];
@@ -118,6 +121,9 @@ function HammurabiContainer(props: HammurabiContainerProps) {
                       ]}
                       getFilters={(filter: FiltersPanelHammurabi) => {
                         localFilterPanel = filter;
+                      }}
+                      setFormRef={(refForm: any) => {
+                        formRef = refForm;
                       }}
                     />}
                 ],

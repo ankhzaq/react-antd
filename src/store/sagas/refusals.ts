@@ -42,7 +42,6 @@ function* getRefusalsJobsDataAllDates() {
     data = data.concat(dataDateParsed);
   });
 
-  debugger;
   yield put({ type: `${SCREEN_ID}_grid_${constants.COMMON.SUCCEEDED}`, payload: { data: { data } }});
 }
 

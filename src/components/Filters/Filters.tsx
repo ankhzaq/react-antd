@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Button, DatePicker, Input, Layout, Select, TimePicker, Menu, Dropdown } from 'antd';
+import { Button, DatePicker, Input, Layout, Select, TimePicker, Menu, Dropdown, Form } from 'antd';
 
 import { BasicObject } from 'interfaces/common';
 import 'antd/dist/antd.css';
+import moment from 'moment';
 
 const { Sider } = Layout;
 const { Option } = Select;
@@ -10,6 +11,7 @@ const { Option } = Select;
 interface FiltersProps {
   filters: any[];
   getFilters?: ({}) => void;
+  setFormRef?: ({}) => void;
   mode?: 'sider' | 'dropdown';
 };
 
@@ -36,7 +38,9 @@ const setFilters = (props: FiltersElement) => {
 }
 
 export const Filters = (props = defaultProps) => {
-  const { filters, getFilters, mode } = props;
+  const { filters, getFilters, mode, setFormRef } = props;
+
+  const [form] = Form.useForm();
 
   const [showFilterMenu, setShowFilterMenu] = useState(false);
 
@@ -48,6 +52,8 @@ export const Filters = (props = defaultProps) => {
         filtersParsed[key] = defaultValue;
       }
     });
+    form.setFieldsValue(filtersParsed);
+    if (setFormRef) setFormRef(form);
   }, []);
 
   const filtersContent = filters.map((infoFilter: any) => {
@@ -57,6 +63,7 @@ export const Filters = (props = defaultProps) => {
 
     const infoFilterParams = {
       ...infoFilter,
+      defaultValue: null,
       onChange: (param1: any, param2: any) => {
         let value;
         switch (element) {
@@ -67,6 +74,11 @@ export const Filters = (props = defaultProps) => {
             break;
           default: value = param1;
         }
+        const nextValues:BasicObject = {};
+        if (element === 'DatePicker' || element === 'TimePicker') nextValues[key] = moment(value);
+        else nextValues[key] = value;
+
+        form.setFieldsValue(nextValues);
 
         setFilters({ element, key, value });
         if (onChange) onChange(value);
@@ -81,46 +93,58 @@ export const Filters = (props = defaultProps) => {
 
     if (element === "Select") {
       return (
-        <Select
-          className="marginTop width100"
-          key={key}
-          { ...infoFilterParams }
-        >
-          {infoFilter.options && (
-            infoFilter.options.map((info: any) => (
-              <Option key={`${key}-option-${info.key || info.value || info.label}`} {...info}>{info.label}</Option>
-            ))
-          )}
-        </Select>
+        <Form.Item name={key}>
+          <Select
+            className="marginTop width100"
+            key={key}
+            { ...infoFilterParams }
+            defaultValue={null}
+          >
+            {infoFilter.options && (
+              infoFilter.options.map((info: any) => (
+                <Option key={`${key}-option-${info.key || info.value || info.label}`} {...info}>{info.label}</Option>
+              ))
+            )}
+          </Select>
+        </Form.Item>
       );
     }
 
     if (element === "DatePicker") {
       return (
-        <DatePicker
-          className="marginTop width100"
-          key={key}
-          { ...infoFilterParams }
-        />
+        <Form.Item name={key}>
+          <DatePicker
+            className="marginTop width100"
+            key={key}
+            { ...infoFilterParams }
+            defaultValue={null}
+          />
+        </Form.Item>
       );
     }
 
     if (element === "TimePicker") {
       return (
-        <TimePicker
-          className="marginTop width100"
-          key={key}
-          { ...infoFilterParams }
-        />
+        <Form.Item name={key}>
+          <TimePicker
+            className="marginTop width100"
+            key={key}
+            { ...infoFilterParams }
+            defaultValue={null}
+          />
+        </Form.Item>
       );
     }
 
     return (
+      <Form.Item name={key}>
       <Input
         className="marginTop"
         key={key}
         {...infoFilterParams}
+        defaultValue={null}
       />
+      </Form.Item>
     );
   });
 
@@ -135,9 +159,15 @@ export const Filters = (props = defaultProps) => {
         </Dropdown>
       ) : mode  === 'sider' ?
     (<Sider className="site-layout-background height100 width100">
-      {filtersContent}
-    </Sider>) : <Layout className="width100 height100">
-    {filtersContent}
-  </Layout>
+      <Form form={form} name="control-hooks">
+        {filtersContent}
+      </Form>
+    </Sider>) : (
+      <Layout className="width100 height100">
+        <Form form={form} name="control-hooks">
+          {filtersContent}
+        </Form>
+      </Layout>
+    )
   );
 }

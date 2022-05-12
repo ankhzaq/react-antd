@@ -9,6 +9,7 @@ import { COLORS } from '../../helpers/consts';
 const { Item } = Menu;
 
 const DivRule = styled.div`
+  display: flex;
   padding: 5px 0px;
 `;
 
@@ -21,10 +22,8 @@ const RulesGuide = () => {
 
   const { data } = useSelector((state: any) => state.common.rules);
 
-  console.log("data: ", data);
-
   const menu = (
-    <Menu theme="dark" style={{ width: '800px' }}>
+    <Menu theme="dark" style={{ height: '250px', overflowY: 'scroll', width: '800px' }}>
       <Item>
         {data.map((rule: any) => {
           const { principleType, principleDesc, ruleType, ruleTypeShortDesc, ruleMvpType } = rule;
