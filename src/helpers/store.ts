@@ -68,6 +68,9 @@ export const initState: BasicObject = {
       data: {}
     },
     grid: {}
+  },
+  interlineageDetail: {
+    diagram: {}
   }
 }
 

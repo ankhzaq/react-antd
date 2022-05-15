@@ -13,6 +13,7 @@ import ObjectsNoRulesContainer from './screens/ObjectsNoRulesContainer';
 import DrilldownContainer from './screens/DrilldownContainer';
 import { constants } from './helpers/consts';
 import RefusalsContainer from './screens/RefusalsContainer';
+import InterlineageDetail from './screens/InterlineageDetail';
 
 const { drilldown, hammurabi, objectsNoRules, refusals } = constants.SCREEN_IDS;
 
@@ -50,6 +51,8 @@ function App() {
 
   return (
     <Routes>
+
+      <Route path="/interlineageDetail" element={<InterlineageDetail /> } />
       <Route path="/playground" element={<StringJsonCommentted /> } />
       <Route path="/objectsNoRules" element={<ObjectsNoRulesContainer /> } />
       <Route path="/" element={

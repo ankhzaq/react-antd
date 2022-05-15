@@ -35,5 +35,8 @@ export interface rootReducerInterface {
         pagination: any
       }
     }
+  },
+  interlineageDetail: {
+    diagram: any
   }
 }
