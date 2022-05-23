@@ -46,13 +46,12 @@ function App() {
 
   useWillMount(() => {
     initializeStore();
-    if (env.MOCKS !== "false") createServerFunc();
+    if (!env || env.MOCKS !== "false") createServerFunc();
   });
 
   return (
     <Routes>
-
-      <Route path="/interlineageDetail" element={<InterlineageDetail /> } />
+      <Route path="/interlineage" element={<InterlineageDetail /> } />
       <Route path="/playground" element={<StringJsonCommentted /> } />
       <Route path="/objectsNoRules" element={<ObjectsNoRulesContainer /> } />
       <Route path="/" element={

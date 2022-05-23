@@ -96,6 +96,7 @@ const InterlineageDetail = () => {
     {
       id: '1b',
       data: { ...genericData, body: 'EOM CONTRATOS' },
+      extent: 'parent',
       // @ts-ignore
       targetPosition: 'left',
       parentNode: '1',
