@@ -1,8 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import ReactFlow, { Background, useNodesState, useEdgesState, addEdge, Controls, MarkerType } from 'react-flow-renderer';
+import React, { useState, useEffect } from 'react';
+// @ts-ignore
+import customId from 'custom-id';
+import ReactFlow, {
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Controls,
+  MarkerType,
+  updateEdge,
+  Connection,
+  Edge
+} from 'react-flow-renderer';
 import DiagramNode from 'components/Interlineage/DiagramNode';
+import { ToolbarStyled } from 'components/Toolbar/style';
+import { Button } from 'antd';
 
-const connectionLineStyle = { stroke: '#fff' };
+const connectionLineStyle = {stroke: '#fff'};
 const snapGrid = [20, 20];
 
 const NODE_TYPES = {
@@ -66,7 +80,7 @@ const InterlineageDetail = () => {
     {
       type: 'customNode',
       id: '1',
-      data: { ...genericData, positionHandleSource: 'right', title: 'F   CONTRATOS' },
+      data: {...genericData, positionHandleSource: 'right', title: 'F   CONTRATOS'},
       // @ts-ignore
       sourcePosition: 'right',
       style: {
@@ -75,11 +89,11 @@ const InterlineageDetail = () => {
         height: 350,
         width: 480
       },
-      position: { x: 100, y: 200 },
+      position: {x: 100, y: 200},
     },
     {
       id: '1a',
-      data: { ...genericData, title: 'P INTERVINIENTES DOMÉSTICA', positionHandleSource: 'right' },
+      data: {...genericData, title: 'P INTERVINIENTES DOMÉSTICA', positionHandleSource: 'right'},
       // @ts-ignore
       sourcePosition: 'right',
       parentNode: '1',
@@ -95,7 +109,7 @@ const InterlineageDetail = () => {
     },
     {
       id: '1b',
-      data: { ...genericData, body: 'EOM CONTRATOS' },
+      data: {...genericData, body: 'EOM CONTRATOS'},
       extent: 'parent',
       // @ts-ignore
       targetPosition: 'left',
@@ -110,7 +124,7 @@ const InterlineageDetail = () => {
     },
     {
       id: '1a1',
-      data: { ...genericData, body: 'EOM INTERVINIENTES' },
+      data: {...genericData, body: 'EOM INTERVINIENTES'},
       extent: 'parent',
       parentNode: '1a',
       position: {
@@ -123,7 +137,7 @@ const InterlineageDetail = () => {
     },
     {
       id: '1a2',
-      data: { ...genericData, body: 'EOM INTERVINIENTES ES DOMÉSTICA' },
+      data: {...genericData, body: 'EOM INTERVINIENTES ES DOMÉSTICA'},
       extent: 'parent',
       parentNode: '1a',
       position: {
@@ -136,7 +150,7 @@ const InterlineageDetail = () => {
     },
     {
       id: '2',
-      data: { ...genericData, title: 'P   CONTRATOS' },
+      data: {...genericData, title: 'P   CONTRATOS'},
       // @ts-ignore
       targetPosition: 'left',
       // @ts-ignore
@@ -147,12 +161,12 @@ const InterlineageDetail = () => {
         width: 200,
         height: 200,
       },
-      position: { x: 650, y: 250 },
+      position: {x: 650, y: 250},
       type: 'customNode',
     },
     {
       id: '2a',
-      data: { ...genericData, title: 'CONTRATOS CLIENTE' },
+      data: {...genericData, title: 'CONTRATOS CLIENTE'},
       extent: 'parent',
       parentNode: '2',
       position: {
@@ -165,14 +179,31 @@ const InterlineageDetail = () => {
     },
     {
       id: '3',
-      data: { ...genericData, body: 'EOM CONTRATOS ACTIVOS', positionHandleTarget: 'top' },
+      data: {...genericData, body: 'EOM CONTRATOS ACTIVOS', positionHandleTarget: 'top'},
       style: {
         ...CUSTOM_STYLE
       },
-      position: { x: 675, y: 500 },
+      position: {x: 675, y: 500},
       type: 'customNode',
     }
   ];
+
+  const getDraftNode = () => {
+
+    const DRAFT_NODE = {
+      data: {...genericData, draft: true, body: 'Insert your body', title: 'Insert your title', positionHandleTarget: 'top'},
+      style: {
+        ...CUSTOM_STYLE
+      },
+      position: {x: 550, y:120},
+      type: 'customNode',
+    };
+
+    return ({
+      ...DRAFT_NODE,
+      id: customId({})
+    });
+  }
 
 
   useEffect(() => {
@@ -182,31 +213,42 @@ const InterlineageDetail = () => {
     setEdges(EDGES);
   }, []);
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#fff' } }, eds)),
-    []
-  );
+  const onEdgeUpdate = (oldEdge: Edge<any>, newConnection: Connection) => setEdges((els) => updateEdge(oldEdge, newConnection, els));
+
+  const onConnect = (params: Edge<any> | Connection) => setEdges((els) => addEdge(params, els));
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      nodeTypes={NODE_TYPES}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      style={{ background: 'rgb(255 255 255)' }}
-      connectionLineStyle={connectionLineStyle}
-      snapToGrid={true}
-      // @ts-ignore
-      snapGrid={snapGrid}
-      defaultZoom={1.5}
-      attributionPosition="bottom-left"
-    >
-      {/* @ts-ignore */}
-      <Background />
-      <Controls />
-    </ReactFlow>
+    <div className="width100 height100 flex-column">
+      <ToolbarStyled>
+        <Button onClick={() => {
+          // @ts-ignore
+          setNodes(nodes.concat([getDraftNode()]));
+        }}>Add node</Button>
+      </ToolbarStyled>
+      <div className="flex1">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          fitView
+          nodeTypes={NODE_TYPES}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onEdgeUpdate={onEdgeUpdate}
+          onConnect={onConnect}
+          // style={{ background: 'rgb(255 255 255)' }}
+          // connectionLineStyle={connectionLineStyle}
+          snapToGrid
+          // @ts-ignore
+          snapGrid={snapGrid}
+          defaultZoom={1.5}
+          attributionPosition="bottom-left"
+        >
+          {/* @ts-ignore */}
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
+    </div>
   );
 };
 
