@@ -3,12 +3,84 @@ import { Handle } from 'react-flow-renderer';
 import './DiagramNode.scss'
 
 import { memo } from 'react';
+import { Button, Input } from 'antd';
+import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { BasicObject } from '../../interfaces/common';
+
+let draftValues: BasicObject = {};
 
 // @ts-ignore
 const DiagramNode = memo((props) => {
   // @ts-ignore
   const { data, id, isConnectable } = props;
-  const { body = null, showHideNodes, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
+  const { body = null, draft, onDraftFinished, onRemoveNode, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
+
+  const renderTitle = () => {
+    if (title) {
+
+      const removeBtn = (
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            onRemoveNode({ id });
+          }}
+          shape="circle"
+          size="small"
+        />
+      );
+
+      if (draft) {
+        return (
+          <div className="diagramNode-header">
+            <Input
+              defaultValue={title}
+              onChange={(param1: any) => {
+                const value = param1.target.value;
+                draftValues.title = value;
+              }}
+            />
+            <Button
+              onClick={() => {
+                onDraftFinished({ id, data: { ...data, ...draftValues, draft: false } });
+              }}
+              icon={<CheckCircleOutlined />}
+              shape="circle"
+            />
+            {removeBtn}
+          </div>
+        )
+      }
+      return (
+        <div className="diagramNode-header">
+          <div>{title}</div>
+          {removeBtn}
+        </div>
+      );
+    }
+    return null;
+  }
+
+  const renderBody = () => {
+    if (title) {
+      if (draft) {
+        return (
+          <div className="diagramNode-body">
+            <Input
+              defaultValue={body}
+              onChange={(param1: any) => {
+                const value = param1.target.value;
+                draftValues.body = value;
+              }}
+            />
+          </div>
+        )
+      }
+      return (<div className="diagramNode-body">{body}</div>);
+    }
+    return null;
+  }
+
 
   return (
     <div className="diagramNode">
@@ -20,8 +92,8 @@ const DiagramNode = memo((props) => {
         onConnect={(params) => console.log('handle onConnect', params)}
         isConnectable={isConnectable}
       />
-      {title && (<div className="diagramNode-header">{title}</div>)}
-      {body && <div className="diagramNode-body">{body}</div>}
+      {renderTitle()}
+      {renderBody()}
       <Handle
         type="source"
         id={id}

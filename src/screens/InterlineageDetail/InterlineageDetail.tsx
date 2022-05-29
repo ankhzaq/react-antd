@@ -54,10 +54,11 @@ const EDGES = [
   }
 ];
 
+let nodesState: any[] = [];
+
 const InterlineageDetail = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
 
   const showHideNodes = (id: string) => {
     const nodeIsVisible = nodes.findIndex((node) => node.id === id);
@@ -72,7 +73,20 @@ const InterlineageDetail = () => {
     }
   }
 
+  // @ts-ignore
+  const onDraftFinished = ({ id, data }) => {
+    const nextNodes = nodesState.map((node) => node.id === id ? ({ ...node, data: data || node.data }) : node);
+    setNodes(nextNodes);
+  }
+// @ts-ignore
+  const onRemoveNode = ({ id }) => {
+    const nextNodes = nodesState.filter((node) => node.id !== id);
+    setNodes(nextNodes);
+  }
+
   const genericData = {
+    onDraftFinished,
+    onRemoveNode,
     showHideNodes
   };
 
@@ -191,7 +205,14 @@ const InterlineageDetail = () => {
   const getDraftNode = () => {
 
     const DRAFT_NODE = {
-      data: {...genericData, draft: true, body: 'Insert your body', title: 'Insert your title', positionHandleTarget: 'top'},
+      data: {
+        ...genericData,
+        draft: true,
+        body: 'Insert your body',
+        title: 'Insert your title',
+        onDraftFinished,
+        positionHandleTarget: 'top'
+      },
       style: {
         ...CUSTOM_STYLE
       },
@@ -216,6 +237,8 @@ const InterlineageDetail = () => {
   const onEdgeUpdate = (oldEdge: Edge<any>, newConnection: Connection) => setEdges((els) => updateEdge(oldEdge, newConnection, els));
 
   const onConnect = (params: Edge<any> | Connection) => setEdges((els) => addEdge(params, els));
+
+  nodesState = nodes;
 
   return (
     <div className="width100 height100 flex-column">
