@@ -80,8 +80,21 @@ const InterlineageDetail = () => {
   }
 // @ts-ignore
   const onRemoveNode = ({ id }) => {
-    const nextNodes = nodesState.filter((node) => node.id !== id);
-    setNodes(nextNodes);
+    const nodesToDelete = [id];
+    let nextNodes = JSON.parse(JSON.stringify(nodesState));
+    while (nodesToDelete.length) {
+      const idToDelete = nodesToDelete[0];
+      nextNodes = nextNodes.filter((node: any) => {
+          if (node.parentNode === idToDelete) {
+            nodesToDelete.push(node.id);
+          }
+          return node.id !== idToDelete && node.parentNode !== idToDelete;
+        }
+      );
+      nodesToDelete.shift();
+    }
+
+    setNodes(nextNodes.map(((node: any) => ({ ...node, data: { ...node.data, ...genericData }}))));
   }
 
   const genericData = {
@@ -94,7 +107,7 @@ const InterlineageDetail = () => {
     {
       type: 'customNode',
       id: '1',
-      data: {...genericData, positionHandleSource: 'right', title: 'F   CONTRATOS'},
+      data: { ...genericData, positionHandleSource: 'right', title: 'F   CONTRATOS'},
       // @ts-ignore
       sourcePosition: 'right',
       style: {
