@@ -51,10 +51,10 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/interlineage" element={<InterlineageDetail /> } />
+      <Route path="/" element={<InterlineageDetail /> } />
       <Route path="/playground" element={<StringJsonCommentted /> } />
       <Route path="/objectsNoRules" element={<ObjectsNoRulesContainer /> } />
-      <Route path="/" element={
+      <Route path="/dq" element={
         <DockLayout
           defaultLayout={layoutDock}
           style={{

@@ -4,7 +4,7 @@ import './DiagramNode.scss'
 
 import { memo } from 'react';
 import { Button, Input } from 'antd';
-import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { BasicObject } from '../../interfaces/common';
 
 let draftValues: BasicObject = {};
@@ -13,10 +13,21 @@ let draftValues: BasicObject = {};
 const DiagramNode = memo((props) => {
   // @ts-ignore
   const { data, id, isConnectable } = props;
-  const { body = null, draft, onDraftFinished, onRemoveNode, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
+  const { body = null, draft, onDraftFinished, onAddNode, onRemoveNode, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
 
   const renderTitle = () => {
     if (title) {
+
+      const addChild = (
+        <Button
+          icon={<PlusCircleOutlined />}
+          onClick={() => {
+            onAddNode({ nodeProps: { extent: 'parent', parentNode: id } });
+          }}
+          shape="circle"
+          size="small"
+        />
+      );
 
       const removeBtn = (
         <Button
@@ -47,6 +58,7 @@ const DiagramNode = memo((props) => {
               icon={<CheckCircleOutlined />}
               shape="circle"
             />
+            {addChild}
             {removeBtn}
           </div>
         )
@@ -54,6 +66,7 @@ const DiagramNode = memo((props) => {
       return (
         <div className="diagramNode-header">
           <div>{title}</div>
+          {addChild}
           {removeBtn}
         </div>
       );

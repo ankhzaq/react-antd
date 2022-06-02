@@ -97,7 +97,14 @@ const InterlineageDetail = () => {
     setNodes(nextNodes.map(((node: any) => ({ ...node, data: { ...node.data, ...genericData }}))));
   }
 
+  const onAddNode = (props?: any) => {
+    const { nodeProps } = (props || {});
+    const nextNode = getDraftNode(nodeProps);
+    setNodes(nodesState.concat([nextNode]));
+  }
+
   const genericData = {
+    onAddNode,
     onDraftFinished,
     onRemoveNode,
     showHideNodes
@@ -215,7 +222,9 @@ const InterlineageDetail = () => {
     }
   ];
 
-  const getDraftNode = () => {
+  const getDraftNode = (nodeProps?: any) => {
+
+    const extraProps = nodeProps || {};
 
     const DRAFT_NODE = {
       data: {
@@ -235,6 +244,7 @@ const InterlineageDetail = () => {
 
     return ({
       ...DRAFT_NODE,
+      ...extraProps,
       id: customId({})
     });
   }
@@ -257,8 +267,7 @@ const InterlineageDetail = () => {
     <div className="width100 height100 flex-column">
       <ToolbarStyled>
         <Button onClick={() => {
-          // @ts-ignore
-          setNodes(nodes.concat([getDraftNode()]));
+          onAddNode();
         }}>Add node</Button>
       </ToolbarStyled>
       <div className="flex1">
