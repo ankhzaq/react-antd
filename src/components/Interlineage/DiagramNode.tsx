@@ -4,7 +4,13 @@ import './DiagramNode.scss'
 
 import { memo } from 'react';
 import { Button, Input } from 'antd';
-import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+  ArrowsAltOutlined,
+  CheckCircleOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+  ShrinkOutlined
+} from '@ant-design/icons';
 import { BasicObject } from '../../interfaces/common';
 
 let draftValues: BasicObject = {};
@@ -13,7 +19,7 @@ let draftValues: BasicObject = {};
 const DiagramNode = memo((props) => {
   // @ts-ignore
   const { data, id, isConnectable } = props;
-  const { body = null, draft, onDraftFinished, onAddNode, onRemoveNode, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
+  const { body = null, draft, resizeActived, onDraftFinished, onAddNode, onRemoveNode, onResize, title = '...', positionHandleSource = 'bottom', positionHandleTarget = 'left' } = data;
 
   const renderTitle = () => {
     if (title) {
@@ -94,6 +100,53 @@ const DiagramNode = memo((props) => {
     return null;
   }
 
+  const renderResizeMinusBtn = () => {
+    if (!resizeActived) return null;
+
+    const style = {
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      margin: '2px'
+    }
+
+    return (
+      <Button
+        icon={<ShrinkOutlined />}
+        onClick={() => {
+          onResize(id, -10);
+        }}
+        shape="circle"
+        size="small"
+        // @ts-ignore
+        style={style}
+      />
+    )
+  }
+
+  const renderResizePlusBtn = () => {
+    if (!resizeActived) return null;
+
+    const style = {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      margin: '2px'
+    }
+
+    return (
+      <Button
+        icon={<ArrowsAltOutlined />}
+        onClick={() => {
+          onResize(id, 10);
+        }}
+        shape="circle"
+        size="small"
+        // @ts-ignore
+        style={style}
+      />
+    )
+  }
 
   return (
     <div className="diagramNode">
@@ -107,6 +160,8 @@ const DiagramNode = memo((props) => {
       />
       {renderTitle()}
       {renderBody()}
+      {renderResizeMinusBtn()}
+      {renderResizePlusBtn()}
       <Handle
         type="source"
         id={id}

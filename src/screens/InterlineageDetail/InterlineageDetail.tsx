@@ -103,10 +103,27 @@ const InterlineageDetail = () => {
     setNodes(nodesState.concat([nextNode]));
   }
 
+  const onResize = (id: string, resize: number) => {
+    const nextNodes = nodesState.map((node) => {
+      if (node.id !== id) return node;
+      const nextStyleNode = {
+        ...node.style,
+        height: node.style.height + resize,
+        width: node.style.width + resize,
+      }
+      return {
+        ...node,
+        style: nextStyleNode
+      }
+    });
+    setNodes(nextNodes);
+  }
+
   const genericData = {
     onAddNode,
     onDraftFinished,
     onRemoveNode,
+    onResize,
     showHideNodes
   };
 
@@ -127,7 +144,7 @@ const InterlineageDetail = () => {
     },
     {
       id: '1a',
-      data: {...genericData, title: 'P INTERVINIENTES DOMÉSTICA', positionHandleSource: 'right'},
+      data: {...genericData, title: 'P INTERVINIENTES DOMÉSTICA', positionHandleSource: 'right', resizeActived: true},
       // @ts-ignore
       sourcePosition: 'right',
       parentNode: '1',
