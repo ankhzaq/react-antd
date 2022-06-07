@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 // @ts-ignore
 import customId from 'custom-id';
 import ReactFlow, {
   Background,
   useNodesState,
-  useEdgesState,
-  addEdge,
   Controls,
-  MarkerType,
-  updateEdge,
-  Connection,
-  Edge
+  MarkerType
 } from 'react-flow-renderer';
 
 const connectionLineStyle = {stroke: '#fff'};
 const snapGrid = [20, 20];
 
 const propsEdge = {
-  type: 'step'
+  type: 'simplebezier'
 }
 
 const EDGES = [
@@ -156,7 +153,7 @@ const NODES = [
       ),
     },
     id: 'SNAPSHOT',
-    position: {x: 300, y: 110},
+    position: {x: 380, y: 470},
     sourcePosition: 'left',
     targetPosition: 'top',
   },
@@ -169,7 +166,7 @@ const NODES = [
       ),
     },
     id: 'IN_REVIEW',
-    position: {x: 20, y: 230},
+    position: {x: 200, y: 270},
     sourcePosition: 'top',
     targetPosition: 'bottom',
   },
@@ -182,7 +179,7 @@ const NODES = [
       ),
     },
     id: 'REJECTED',
-    position: {x: 200, y: 350},
+    position: {x: -120, y: 390},
     sourcePosition: 'right',
     targetPosition: 'top',
   },
@@ -195,8 +192,8 @@ const NODES = [
       ),
     },
     id: 'ACCEPTED',
-    position: {x: 340, y: 470},
-    sourcePosition: 'top',
+    position: {x: 240, y: 10},
+    sourcePosition: 'bottom',
     targetPosition: 'left',
   },
   {
@@ -208,18 +205,30 @@ const NODES = [
       ),
     },
     id: 'RELEASE',
-    position: {x: 400, y: 190},
-    sourcePosition: 'left',
-    targetPosition: 'top',
+    position: {x: -120, y: 250},
+    sourcePosition: 'top',
+    targetPosition: 'right',
   },
 ];
 
-const DQFlow = () => {
+const DQFlow = (props: any) => {
+
+  const {
+    edgesToAnimate,
+    nodesToShow
+  } = props;
+
+  const getEdges = () => {
+    if (!edgesToAnimate) return EDGES;
+    return EDGES.map((edge) => {
+      // @ts-ignore
+      if (edgesToAnimate.includes(edge.id)) return { ...edge, animated: true };
+      return edge;
+    })
+  }
 
   // @ts-ignore
-  const [nodes, setNodes, onNodesChange] = useNodesState(NODES);
-
-  console.log("nodes: ", nodes)
+  const [nodes, setNodes, onNodesChange] = useNodesState(nodesToShow ? NODES.filter((node) => nodesToShow.includes(node.id)) : NODES);
 
   return (
     <div className="width100 height100 flex-column">
@@ -227,10 +236,10 @@ const DQFlow = () => {
         <ReactFlow
           // @ts-ignore
           nodes={nodes}
-          edges={EDGES}
+          edges={getEdges()}
           fitView
-          // style={{ background: 'rgb(255 255 255)' }}
-          // connectionLineStyle={connectionLineStyle}
+          style={{ background: 'rgb(255 255 255)' }}
+          connectionLineStyle={connectionLineStyle}
           onNodesChange={onNodesChange}
           snapToGrid
           // @ts-ignore
@@ -246,5 +255,15 @@ const DQFlow = () => {
     </div>
   );
 };
+
+DQFlow.defaultProps = {
+  edgesToAnimate: null,
+  nodesToShow: null
+}
+
+DQFlow.propTypes = {
+  edgesToAnimate: PropTypes.array,
+  nodesToShow: PropTypes.array
+}
 
 export default DQFlow;

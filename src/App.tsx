@@ -52,7 +52,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<DQFlow /> } />
+      <Route path="/" element={
+        <DQFlow
+          edgesToAnimate={['IN_REVIEW-SNAPSHOT']}
+        />
+      } />
       <Route path="/interlineage" element={<InterlineageDetail /> } />
       <Route path="/playground" element={<StringJsonCommentted /> } />
       <Route path="/objectsNoRules" element={<ObjectsNoRulesContainer /> } />
